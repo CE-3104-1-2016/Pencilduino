@@ -1,0 +1,17 @@
+{
+  "name": "language-pencilduino",
+  "version": "0.0.0",
+  "description": "Helper plugin for the Pencilduino project of the course CE-3104, ITCR.",
+  "engines": {
+    "atom": "*"
+  },
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CE-3104-1-2016/Pencilduino.git"
+  },
+  "bugs": {
+    "url": "https://github.com/CE-3104-1-2016/Pencilduino/issues"
+  },
+  "license": "MIT"
+}

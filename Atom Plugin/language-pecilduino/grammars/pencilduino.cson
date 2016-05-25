@@ -1,0 +1,127 @@
+'scopeName': 'source.pencilduino'
+'name': 'Pencilduino'
+'fileTypes': ['pd', 'pen']
+'patterns': [
+    {
+  		'match': '\\b(?i)(DCL)\\b'
+  		'name': 'keyword.other.pencilduino'
+    },
+    {
+  		'match': '\\b(?i)(DEFAULT)\\b'
+  		'name': 'keyword.operator.pencilduino'
+    },
+    {
+  		'match': '\\b(?i)(EnCaso)\\b'
+  		'name': 'keyword.control.pencilduino'
+    },
+    {
+  		'match': '\\b(?i)(int)\\b'
+  		'name': 'storage.type.pencilduino'
+    },
+    {
+  		'match': '\\b(?i)(Cuando)\\b'
+  		'name': 'keyword.control.pencilduino'
+    },
+    {
+  		'match': '\\b(?i)(SiNo)\\b'
+  		'name': 'keyword.control.pencilduino'
+    },
+    {
+  		'match': '\\b(?i)(EnTons)\\b'
+  		'name': 'keyword.control.pencilduino'
+    },
+    {
+  		'match': '\\b(?i)(Fin-EnCaso)\\b'
+  		'name': 'keyword.control.pencilduino'
+    },
+    {
+  		'match': '\\b(?i)(Repita)\\b'
+  		'name': 'keyword.control.pencilduino'
+    },
+    {
+  		'match': '\\b(?i)(HastaEncontrar)\\b'
+  		'name': 'keyword.control.pencilduino'
+    },
+    {
+  		'match': '\\b(?i)(Desde)\\b'
+  		'name': 'keyword.control.pencilduino'
+    },
+    {
+  		'match': '\\b(?i)(Hasta)\\b'
+  		'name': 'keyword.control.pencilduino'
+    },
+    {
+  		'match': '\\b(?i)(Haga)\\b'
+  		'name': 'keyword.control.pencilduino'
+    },
+
+    {
+  		'match': '\\b(?i)(Fin-Desde)\\b'
+  		'name': 'keyword.control.pencilduino'
+    },
+    {
+  		'match': '\\b(?i)(Punto)\\b'
+  		'name': 'support.function.pencilduino'
+    },
+    {
+  		'match': '\\b(?i)(Inc)\\b'
+  		'name': 'support.function.pencilduino'
+    },
+    {
+  		'match': '\\b(?i)(Dec)\\b'
+  		'name': 'support.function.pencilduino'
+    },
+
+    {
+  		'match': '\\b(?i)(Ini)\\b'
+  		'name': 'support.function.pencilduino'
+    },
+    {
+  		'match': '\\b(?i)(Rellene)\\b'
+  		'name': 'support.function.pencilduino'
+    },
+    {
+  		'match': '\\b(?i)(DiagonalI)\\b'
+  		'name': 'support.function.pencilduino'
+    },
+    {
+  		'match': '\\b(?i)(DiagonalD)\\b'
+  		'name': 'support.function.pencilduino'
+    },
+    {
+  		'match': '\\b(?i)(Borrar)\\b'
+  		'name': 'support.function.pencilduino'
+    },
+    {
+  		'match': '\\b(?i)(Proc)\\b'
+  		'name': 'storage.type.pencilduino'
+    },
+    {
+  		'match': '\\b(?i)(Inicio)\\b'
+  		'name': 'keyword.control.pencilduino'
+    },
+    {
+  		'match': '\\b(?i)(Final)\\b'
+  		'name': 'keyword.control.pencilduino'
+    },
+    {
+  		'match': '\\b(?i)(Llamar)\\b'
+  		'name': 'keyword.control.pencilduino'
+    },
+    {
+  		'match': '\\b(\\d+)\\b'
+  		'name': 'constant.numeric.pencilduino'
+    },
+    {
+  		'match': '\\b(?i)(([a-z]|_)([a-z]|_|\\d)*)\\b'
+  		'name': 'entity.name.pencilduino'
+    },
+    {
+  		'match': '\\b(?i)(<|>|=|<>|>=|<=)\\b'
+  		'name': 'keyword.operator.pencilduino'
+    },
+    {
+  		'match': '\\b(?i)(\\d([a-z]|_|)*)\\b'
+  		'name': 'invalid.illegal.pencilduino'
+    }
+]

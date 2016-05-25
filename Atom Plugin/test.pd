@@ -1,0 +1,26 @@
+EnCaso
+ Cuando Identificador < Sentencia EnTons
+ { expresión }
+ Cuando Identificador = Sentencia EnTons
+ { expresión }
+SiNo
+ { expresión }
+Fin-EnCaso;
+EnCaso Identificador
+ Cuando Condición Sentencia EnTons
+ { expresión }
+ Cuando Condición Sentencia EnTons
+ { expresión }
+ SiNo
+ { 1expresión }
+Fin-EnCaso;
+Desde Identificador:= exp1 Hasta exp2 Haga
+Sentencias
+Fin-Desde;
+Rellene(A)
+DiagonalI(A)
+Proc NombreProc (Parametros)
+ DCL … (opcional)
+Inicio:
+ Expresión
+Final;
