@@ -70,29 +70,36 @@ class myDrawingPlace(object):
 		self.matrix = [] 
 		self.initMatrix(self.matrix,self.width,self.height)
 		self.printMatrix(self.matrix,self.width,self.height)
+		self.lastPointX = 0
+		self.lastPointY = 0
+		self.lastColor = 0
+		self.squares = []
 		#self.squareXY(3,7,1)
 		#self.squareXY(3,6,0)
-		#self.squareXY(3,8,3)
-	#initialize the matrix
+		#self.squareXY(3,8,1)
+		#self.diagonal("left","down")
+		#self.printMatrix(self.matrix,self.width,self.height)
+
+
+	#initialize the matrix 
 	def initMatrix (self,matrix,width,height):
 		i = 0
 		while (i < width):
 			j = 0 
 			temp = []
 			while (j < height):
-				temp  = temp + [3]
+				temp  = temp + ["gray"]
 				j = j + 1	
 			self.matrix = self.matrix + [temp]
 			i = i + 1
-	#print the matrix
+	#print the matrix using the amount of rows and colums
 	def printMatrix (self,matrix,width,height):
 		i = 0
 		while (i < width):
 			print (matrix[i]) 
 			i = i + 1
-	#paint a square
+	#paint a square using rows and  cols
 	def squareXY(self,posx,posy,color):
-
 		if (posx <= self.width and posy <= self.height):
 			myColor =  ""
 			if (color == 0 ):
@@ -101,14 +108,37 @@ class myDrawingPlace(object):
 				myColor = "red"
 			else:
 				myColor = "black"
-			self.myCanvas.create_rectangle(posx*30, posy*30,posx*30+ 30,posy*30 + 30, fill=myColor)
-
+			self.lastPointX = posx*30
+			self.lastPointY = posy*30
+			self.lastColor = color
+			square = self.myCanvas.create_rectangle(posx*30, posy*30,posx*30+ 30,posy*30 + 30, fill=myColor)
+			self.squares = self.squares + [square]
+			self.matrix[posx][posy] = [myColor]
 		else: 
 			print ("Error while painting the square.")
-
-
-
-
+	#diagonal  (right or left , up or down)
+	def diagonal (self,directionX,directionY):
+		xAxisMovement=0
+		yAxisMovement=0
+		if (directionX == "right"):
+			xAxisMovement = 1
+		if (directionY == "down"):
+			yAxisMovement = 1
+		if  (directionX == "left" ):
+			xAxisMovement = -1
+		if (directionY == "up"):
+			yAxisMovement = -1
+		print(xAxisMovement)
+		print(yAxisMovement)
+		nextXPosition = int((self.lastPointX)/30) + xAxisMovement
+		nextYPosition = int((self.lastPointY)/30) + yAxisMovement
+		
+		while ((nextXPosition < self.width and nextYPosition < self.height) 
+													and nextXPosition >= 0 and nextYPosition >= 0 ):
+			print("The new position is: " + str (nextXPosition) + " : "+ str(nextYPosition) )
+			self.squareXY(nextXPosition,nextYPosition,self.lastColor)
+			nextXPosition = nextXPosition + xAxisMovement
+			nextYPosition = nextYPosition + yAxisMovement
 class myWindow:
 	actual_index=3.0
 	def __init__(self):
