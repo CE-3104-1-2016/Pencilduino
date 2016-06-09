@@ -69,18 +69,16 @@ class myDrawingPlace(object):
 		self.myCanvas.place(x=600,y=100)
 		self.matrix = [] 
 		self.initMatrix(self.matrix,self.width,self.height)
-		self.printMatrix(self.matrix,self.width,self.height)
 		self.lastPointX = 0
 		self.lastPointY = 0
 		self.lastColor = 0
 		self.squares = []
-		#self.squareXY(3,7,1)
+		self.squareXY(3,7,1)
 		#self.squareXY(3,6,0)
 		#self.squareXY(3,8,1)
-		#self.diagonal("left","down")
+		self.diagonal("left","down")
 		#self.printMatrix(self.matrix,self.width,self.height)
-
-
+		self.eraseSquares()
 	#initialize the matrix 
 	def initMatrix (self,matrix,width,height):
 		i = 0
@@ -139,6 +137,13 @@ class myDrawingPlace(object):
 			self.squareXY(nextXPosition,nextYPosition,self.lastColor)
 			nextXPosition = nextXPosition + xAxisMovement
 			nextYPosition = nextYPosition + yAxisMovement
+	def eraseSquares(self):
+		if (self.squares == []):
+			print ("Nothing to erase")
+		else:
+			for i in self.squares:
+				self.myCanvas.delete(i)
+			self.root.update()
 class myWindow:
 	actual_index=3.0
 	def __init__(self):
