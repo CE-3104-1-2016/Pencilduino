@@ -1,524 +1,3769 @@
-Created by PLY version 3.4 (http://www.dabeaz.com/ply)
-
-Unused terminals:
-
-    DO
-    UNTIL
-    ENDSINCE
-    MINUS
-    DOT
-    FILL
-    RPAREN
-    PLUS
-    REPEAT
-    END
-    DIVIDE
-    DIAGL
-    TIMES
-    DIAGR
-    START
-    TOFIND
-    LPAREN
-    PROCEDURE
-    FROM
-    CALL
-    INI
-    INC
+Created by PLY version 3.8 (http://www.dabeaz.com/ply)
 
 Grammar
 
-Rule 0     S' -> expresion
-Rule 1     expresion -> declare
-Rule 2     expresion -> inCase
-Rule 3     expresion -> repeat
-Rule 4     declare -> DECLARE ID SEMICOLON
-Rule 5     declare -> DECLARE ID DEFAULT NUMBER SEMICOLON
-Rule 6     inCase -> INCASE when1 ifnot ENDINCASE SEMICOLON
-Rule 7     inCase -> INCASE ID when2 ifnot ENDINCASE SEMICOLON
-Rule 8     when1 -> WHEN ID CONDITION sentence THEN LBRACKET expresion RBRACKET when1
-Rule 9     when1 -> empty
-Rule 10    ifnot -> IFNOT LBRACKET expresion RBRACKET
-Rule 11    when2 -> WHEN CONDITION sentence THEN LBRACKET expresion RBRACKET when2
-Rule 12    when2 -> empty
-Rule 13    sentence -> ID
-Rule 14    sentence -> NUMBER
-Rule 15    repeat -> <empty>
-Rule 16    empty -> <empty>
+Rule 0     S' -> expression
+Rule 1     expression -> declare expression
+Rule 2     expression -> inCase expression
+Rule 3     expression -> repeat expression
+Rule 4     expression -> since expression
+Rule 5     expression -> dot expression
+Rule 6     expression -> initialize expression
+Rule 7     expression -> fill expression
+Rule 8     expression -> increase expression
+Rule 9     expression -> decrease expression
+Rule 10    expression -> diagonal_right expression
+Rule 11    expression -> diagonal_left expression
+Rule 12    expression -> procedure expression
+Rule 13    expression -> call expression
+Rule 14    expression -> empty
+Rule 15    declare -> DECLARE ID SEMICOLON
+Rule 16    declare -> DECLARE ID DEFAULT NUMBER SEMICOLON
+Rule 17    inCase -> INCASE when1 ifnot ENDINCASE SEMICOLON
+Rule 18    inCase -> INCASE ID when2 ifnot ENDINCASE SEMICOLON
+Rule 19    when1 -> WHEN ID CONDITION sentence THEN LBRACKET expression RBRACKET when1
+Rule 20    when1 -> empty
+Rule 21    when2 -> WHEN CONDITION sentence THEN LBRACKET expression RBRACKET when2
+Rule 22    when2 -> empty
+Rule 23    ifnot -> IFNOT LBRACKET expression RBRACKET
+Rule 24    sentence -> ID
+Rule 25    sentence -> NUMBER
+Rule 26    repeat -> REPEAT expression until_find SEMICOLON
+Rule 27    until_find -> TOFIND sentence CONDITION sentence
+Rule 28    since -> FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON
+Rule 29    dot -> DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON
+Rule 30    increase -> INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+Rule 31    decrease -> DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+Rule 32    initialize -> INITIALIZE LPAREN ID RPAREN SEMICOLON
+Rule 33    fill -> FILL LPAREN fillSentence RPAREN SEMICOLON
+Rule 34    fillSentence -> ID
+Rule 35    fillSentence -> NUMBER
+Rule 36    diagonal_left -> DIAGL LPAREN sentence RPAREN SEMICOLON
+Rule 37    diagonal_right -> DIAGR LPAREN sentence RPAREN SEMICOLON
+Rule 38    empty -> <empty>
+Rule 39    localDeclare -> DECLARE ID SEMICOLON
+Rule 40    localDeclare -> DECLARE ID DEFAULT NUMBER SEMICOLON
+Rule 41    localExpression -> inCase localExpression
+Rule 42    localExpression -> repeat localExpression
+Rule 43    localExpression -> since localExpression
+Rule 44    localExpression -> dot localExpression
+Rule 45    localExpression -> initialize localExpression
+Rule 46    localExpression -> fill localExpression
+Rule 47    localExpression -> increase localExpression
+Rule 48    localExpression -> decrease localExpression
+Rule 49    localExpression -> diagonal_right localExpression
+Rule 50    localExpression -> diagonal_left localExpression
+Rule 51    localExpression -> procedure localExpression
+Rule 52    localExpression -> empty
+Rule 53    params -> oneParam
+Rule 54    params -> moreParam
+Rule 55    params -> empty
+Rule 56    oneParam -> ID params
+Rule 57    moreParam -> COMMA ID params
+Rule 58    procedure -> PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON
+Rule 59    params_call -> oneParam_call
+Rule 60    params_call -> moreParam_call
+Rule 61    params_call -> empty
+Rule 62    oneParam_call -> ID params_call
+Rule 63    oneParam_call -> NUMBER params_call
+Rule 64    moreParam_call -> COMMA ID params_call
+Rule 65    moreParam_call -> COMMA NUMBER params_call
+Rule 66    call -> CALL ID LPAREN params_call RPAREN SEMICOLON
 
 Terminals, with rules where they appear
 
-CALL                 : 
-CONDITION            : 8 11
-DECLARE              : 4 5
-DEFAULT              : 5
-DIAGL                : 
-DIAGR                : 
-DIVIDE               : 
-DO                   : 
-DOT                  : 
-END                  : 
-ENDINCASE            : 6 7
-ENDSINCE             : 
-FILL                 : 
-FROM                 : 
-ID                   : 4 5 7 8 13
-IFNOT                : 10
-INC                  : 
-INCASE               : 6 7
-INI                  : 
-LBRACKET             : 8 10 11
-LPAREN               : 
-MINUS                : 
-NUMBER               : 5 14
-PLUS                 : 
-PROCEDURE            : 
-RBRACKET             : 8 10 11
-REPEAT               : 
-RPAREN               : 
-SEMICOLON            : 4 5 6 7
-START                : 
-THEN                 : 8 11
-TIMES                : 
-TOFIND               : 
-UNTIL                : 
-WHEN                 : 8 11
+CALL                 : 66
+COLON                : 58
+COLOR                : 29
+COMMA                : 29 29 30 31 57 64 65
+CONDITION            : 19 21 27 28
+DECLARE              : 15 16 39 40
+DECREASE             : 31
+DEFAULT              : 16 40
+DIAGL                : 36
+DIAGR                : 37
+DO                   : 28
+DOT                  : 29
+END                  : 58
+ENDFROM              : 28
+ENDINCASE            : 17 18
+FILL                 : 33
+FROM                 : 28
+ID                   : 15 16 18 19 24 30 31 32 34 39 40 56 57 58 62 64 66
+IFNOT                : 23
+INCASE               : 17 18
+INCREASE             : 30
+INITIALIZE           : 32
+LBRACKET             : 19 21 23
+LPAREN               : 29 30 31 32 33 36 37 58 66
+NUMBER               : 16 25 35 40 63 65
+PROCEDURE            : 58
+RBRACKET             : 19 21 23
+REPEAT               : 26
+RPAREN               : 29 30 31 32 33 36 37 58 66
+SEMICOLON            : 15 16 17 18 26 28 29 30 31 32 33 36 37 39 40 58 66
+START                : 58
+THEN                 : 19 21
+TOFIND               : 27
+UNTIL                : 28
+WHEN                 : 19 21
 error                : 
 
 Nonterminals, with rules where they appear
 
-declare              : 1
-empty                : 9 12
-expresion            : 8 10 11 0
-ifnot                : 6 7
-inCase               : 2
-repeat               : 3
-sentence             : 8 11
-when1                : 6 8
-when2                : 7 11
+call                 : 13
+declare              : 1 28
+decrease             : 9 48
+diagonal_left        : 11 50
+diagonal_right       : 10 49
+dot                  : 5 44
+empty                : 14 20 22 52 55 61
+expression           : 1 2 3 4 5 6 7 8 9 10 11 12 13 19 21 23 26 28 0
+fill                 : 7 46
+fillSentence         : 33
+ifnot                : 17 18
+inCase               : 2 41
+increase             : 8 47
+initialize           : 6 45
+localDeclare         : 58
+localExpression      : 41 42 43 44 45 46 47 48 49 50 51 58
+moreParam            : 54
+moreParam_call       : 60
+oneParam             : 53
+oneParam_call        : 59
+params               : 56 57 58
+params_call          : 62 63 64 65 66
+procedure            : 12 51
+repeat               : 3 42
+sentence             : 19 21 27 27 28 29 29 30 31 36 37
+since                : 4 43
+until_find           : 26
+when1                : 17 19
+when2                : 18 21
 
 Parsing method: LALR
 
 state 0
 
-    (0) S' -> . expresion
-    (1) expresion -> . declare
-    (2) expresion -> . inCase
-    (3) expresion -> . repeat
-    (4) declare -> . DECLARE ID SEMICOLON
-    (5) declare -> . DECLARE ID DEFAULT NUMBER SEMICOLON
-    (6) inCase -> . INCASE when1 ifnot ENDINCASE SEMICOLON
-    (7) inCase -> . INCASE ID when2 ifnot ENDINCASE SEMICOLON
-    (15) repeat -> .
+    (0) S' -> . expression
+    (1) expression -> . declare expression
+    (2) expression -> . inCase expression
+    (3) expression -> . repeat expression
+    (4) expression -> . since expression
+    (5) expression -> . dot expression
+    (6) expression -> . initialize expression
+    (7) expression -> . fill expression
+    (8) expression -> . increase expression
+    (9) expression -> . decrease expression
+    (10) expression -> . diagonal_right expression
+    (11) expression -> . diagonal_left expression
+    (12) expression -> . procedure expression
+    (13) expression -> . call expression
+    (14) expression -> . empty
+    (15) declare -> . DECLARE ID SEMICOLON
+    (16) declare -> . DECLARE ID DEFAULT NUMBER SEMICOLON
+    (17) inCase -> . INCASE when1 ifnot ENDINCASE SEMICOLON
+    (18) inCase -> . INCASE ID when2 ifnot ENDINCASE SEMICOLON
+    (26) repeat -> . REPEAT expression until_find SEMICOLON
+    (28) since -> . FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON
+    (29) dot -> . DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON
+    (32) initialize -> . INITIALIZE LPAREN ID RPAREN SEMICOLON
+    (33) fill -> . FILL LPAREN fillSentence RPAREN SEMICOLON
+    (30) increase -> . INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (31) decrease -> . DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (37) diagonal_right -> . DIAGR LPAREN sentence RPAREN SEMICOLON
+    (36) diagonal_left -> . DIAGL LPAREN sentence RPAREN SEMICOLON
+    (58) procedure -> . PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON
+    (66) call -> . CALL ID LPAREN params_call RPAREN SEMICOLON
+    (38) empty -> .
 
-    DECLARE         shift and go to state 5
-    INCASE          shift and go to state 4
-    $end            reduce using rule 15 (repeat -> .)
+    DECLARE         shift and go to state 25
+    INCASE          shift and go to state 14
+    REPEAT          shift and go to state 18
+    FROM            shift and go to state 26
+    DOT             shift and go to state 8
+    INITIALIZE      shift and go to state 10
+    FILL            shift and go to state 2
+    INCREASE        shift and go to state 21
+    DECREASE        shift and go to state 27
+    DIAGR           shift and go to state 7
+    DIAGL           shift and go to state 5
+    PROCEDURE       shift and go to state 22
+    CALL            shift and go to state 16
+    $end            reduce using rule 38 (empty -> .)
 
-    expresion                      shift and go to state 1
-    repeat                         shift and go to state 2
-    inCase                         shift and go to state 3
-    declare                        shift and go to state 6
+    repeat                         shift and go to state 13
+    decrease                       shift and go to state 15
+    procedure                      shift and go to state 1
+    since                          shift and go to state 17
+    declare                        shift and go to state 4
+    diagonal_right                 shift and go to state 12
+    fill                           shift and go to state 20
+    initialize                     shift and go to state 11
+    diagonal_left                  shift and go to state 23
+    dot                            shift and go to state 24
+    empty                          shift and go to state 6
+    call                           shift and go to state 3
+    expression                     shift and go to state 9
+    increase                       shift and go to state 19
+    inCase                         shift and go to state 28
 
 state 1
 
-    (0) S' -> expresion .
+    (12) expression -> procedure . expression
+    (1) expression -> . declare expression
+    (2) expression -> . inCase expression
+    (3) expression -> . repeat expression
+    (4) expression -> . since expression
+    (5) expression -> . dot expression
+    (6) expression -> . initialize expression
+    (7) expression -> . fill expression
+    (8) expression -> . increase expression
+    (9) expression -> . decrease expression
+    (10) expression -> . diagonal_right expression
+    (11) expression -> . diagonal_left expression
+    (12) expression -> . procedure expression
+    (13) expression -> . call expression
+    (14) expression -> . empty
+    (15) declare -> . DECLARE ID SEMICOLON
+    (16) declare -> . DECLARE ID DEFAULT NUMBER SEMICOLON
+    (17) inCase -> . INCASE when1 ifnot ENDINCASE SEMICOLON
+    (18) inCase -> . INCASE ID when2 ifnot ENDINCASE SEMICOLON
+    (26) repeat -> . REPEAT expression until_find SEMICOLON
+    (28) since -> . FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON
+    (29) dot -> . DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON
+    (32) initialize -> . INITIALIZE LPAREN ID RPAREN SEMICOLON
+    (33) fill -> . FILL LPAREN fillSentence RPAREN SEMICOLON
+    (30) increase -> . INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (31) decrease -> . DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (37) diagonal_right -> . DIAGR LPAREN sentence RPAREN SEMICOLON
+    (36) diagonal_left -> . DIAGL LPAREN sentence RPAREN SEMICOLON
+    (58) procedure -> . PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON
+    (66) call -> . CALL ID LPAREN params_call RPAREN SEMICOLON
+    (38) empty -> .
 
+    DECLARE         shift and go to state 25
+    INCASE          shift and go to state 14
+    REPEAT          shift and go to state 18
+    FROM            shift and go to state 26
+    DOT             shift and go to state 8
+    INITIALIZE      shift and go to state 10
+    FILL            shift and go to state 2
+    INCREASE        shift and go to state 21
+    DECREASE        shift and go to state 27
+    DIAGR           shift and go to state 7
+    DIAGL           shift and go to state 5
+    PROCEDURE       shift and go to state 22
+    CALL            shift and go to state 16
+    $end            reduce using rule 38 (empty -> .)
+    TOFIND          reduce using rule 38 (empty -> .)
+    RBRACKET        reduce using rule 38 (empty -> .)
+    ENDFROM         reduce using rule 38 (empty -> .)
 
+    repeat                         shift and go to state 13
+    decrease                       shift and go to state 15
+    procedure                      shift and go to state 1
+    since                          shift and go to state 17
+    declare                        shift and go to state 4
+    diagonal_right                 shift and go to state 12
+    fill                           shift and go to state 20
+    initialize                     shift and go to state 11
+    diagonal_left                  shift and go to state 23
+    dot                            shift and go to state 24
+    empty                          shift and go to state 6
+    call                           shift and go to state 3
+    expression                     shift and go to state 29
+    increase                       shift and go to state 19
+    inCase                         shift and go to state 28
 
 state 2
 
-    (3) expresion -> repeat .
+    (33) fill -> FILL . LPAREN fillSentence RPAREN SEMICOLON
 
-    RBRACKET        reduce using rule 3 (expresion -> repeat .)
-    $end            reduce using rule 3 (expresion -> repeat .)
+    LPAREN          shift and go to state 30
 
 
 state 3
 
-    (2) expresion -> inCase .
+    (13) expression -> call . expression
+    (1) expression -> . declare expression
+    (2) expression -> . inCase expression
+    (3) expression -> . repeat expression
+    (4) expression -> . since expression
+    (5) expression -> . dot expression
+    (6) expression -> . initialize expression
+    (7) expression -> . fill expression
+    (8) expression -> . increase expression
+    (9) expression -> . decrease expression
+    (10) expression -> . diagonal_right expression
+    (11) expression -> . diagonal_left expression
+    (12) expression -> . procedure expression
+    (13) expression -> . call expression
+    (14) expression -> . empty
+    (15) declare -> . DECLARE ID SEMICOLON
+    (16) declare -> . DECLARE ID DEFAULT NUMBER SEMICOLON
+    (17) inCase -> . INCASE when1 ifnot ENDINCASE SEMICOLON
+    (18) inCase -> . INCASE ID when2 ifnot ENDINCASE SEMICOLON
+    (26) repeat -> . REPEAT expression until_find SEMICOLON
+    (28) since -> . FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON
+    (29) dot -> . DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON
+    (32) initialize -> . INITIALIZE LPAREN ID RPAREN SEMICOLON
+    (33) fill -> . FILL LPAREN fillSentence RPAREN SEMICOLON
+    (30) increase -> . INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (31) decrease -> . DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (37) diagonal_right -> . DIAGR LPAREN sentence RPAREN SEMICOLON
+    (36) diagonal_left -> . DIAGL LPAREN sentence RPAREN SEMICOLON
+    (58) procedure -> . PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON
+    (66) call -> . CALL ID LPAREN params_call RPAREN SEMICOLON
+    (38) empty -> .
 
-    RBRACKET        reduce using rule 2 (expresion -> inCase .)
-    $end            reduce using rule 2 (expresion -> inCase .)
+    DECLARE         shift and go to state 25
+    INCASE          shift and go to state 14
+    REPEAT          shift and go to state 18
+    FROM            shift and go to state 26
+    DOT             shift and go to state 8
+    INITIALIZE      shift and go to state 10
+    FILL            shift and go to state 2
+    INCREASE        shift and go to state 21
+    DECREASE        shift and go to state 27
+    DIAGR           shift and go to state 7
+    DIAGL           shift and go to state 5
+    PROCEDURE       shift and go to state 22
+    CALL            shift and go to state 16
+    $end            reduce using rule 38 (empty -> .)
+    TOFIND          reduce using rule 38 (empty -> .)
+    RBRACKET        reduce using rule 38 (empty -> .)
+    ENDFROM         reduce using rule 38 (empty -> .)
 
+    repeat                         shift and go to state 13
+    decrease                       shift and go to state 15
+    procedure                      shift and go to state 1
+    since                          shift and go to state 17
+    declare                        shift and go to state 4
+    diagonal_right                 shift and go to state 12
+    fill                           shift and go to state 20
+    initialize                     shift and go to state 11
+    diagonal_left                  shift and go to state 23
+    dot                            shift and go to state 24
+    empty                          shift and go to state 6
+    call                           shift and go to state 3
+    expression                     shift and go to state 31
+    increase                       shift and go to state 19
+    inCase                         shift and go to state 28
 
 state 4
 
-    (6) inCase -> INCASE . when1 ifnot ENDINCASE SEMICOLON
-    (7) inCase -> INCASE . ID when2 ifnot ENDINCASE SEMICOLON
-    (8) when1 -> . WHEN ID CONDITION sentence THEN LBRACKET expresion RBRACKET when1
-    (9) when1 -> . empty
-    (16) empty -> .
+    (1) expression -> declare . expression
+    (1) expression -> . declare expression
+    (2) expression -> . inCase expression
+    (3) expression -> . repeat expression
+    (4) expression -> . since expression
+    (5) expression -> . dot expression
+    (6) expression -> . initialize expression
+    (7) expression -> . fill expression
+    (8) expression -> . increase expression
+    (9) expression -> . decrease expression
+    (10) expression -> . diagonal_right expression
+    (11) expression -> . diagonal_left expression
+    (12) expression -> . procedure expression
+    (13) expression -> . call expression
+    (14) expression -> . empty
+    (15) declare -> . DECLARE ID SEMICOLON
+    (16) declare -> . DECLARE ID DEFAULT NUMBER SEMICOLON
+    (17) inCase -> . INCASE when1 ifnot ENDINCASE SEMICOLON
+    (18) inCase -> . INCASE ID when2 ifnot ENDINCASE SEMICOLON
+    (26) repeat -> . REPEAT expression until_find SEMICOLON
+    (28) since -> . FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON
+    (29) dot -> . DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON
+    (32) initialize -> . INITIALIZE LPAREN ID RPAREN SEMICOLON
+    (33) fill -> . FILL LPAREN fillSentence RPAREN SEMICOLON
+    (30) increase -> . INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (31) decrease -> . DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (37) diagonal_right -> . DIAGR LPAREN sentence RPAREN SEMICOLON
+    (36) diagonal_left -> . DIAGL LPAREN sentence RPAREN SEMICOLON
+    (58) procedure -> . PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON
+    (66) call -> . CALL ID LPAREN params_call RPAREN SEMICOLON
+    (38) empty -> .
 
-    ID              shift and go to state 10
-    WHEN            shift and go to state 7
-    IFNOT           reduce using rule 16 (empty -> .)
+    DECLARE         shift and go to state 25
+    INCASE          shift and go to state 14
+    REPEAT          shift and go to state 18
+    FROM            shift and go to state 26
+    DOT             shift and go to state 8
+    INITIALIZE      shift and go to state 10
+    FILL            shift and go to state 2
+    INCREASE        shift and go to state 21
+    DECREASE        shift and go to state 27
+    DIAGR           shift and go to state 7
+    DIAGL           shift and go to state 5
+    PROCEDURE       shift and go to state 22
+    CALL            shift and go to state 16
+    $end            reduce using rule 38 (empty -> .)
+    TOFIND          reduce using rule 38 (empty -> .)
+    RBRACKET        reduce using rule 38 (empty -> .)
+    ENDFROM         reduce using rule 38 (empty -> .)
 
-    when1                          shift and go to state 8
-    empty                          shift and go to state 9
+    repeat                         shift and go to state 13
+    decrease                       shift and go to state 15
+    procedure                      shift and go to state 1
+    since                          shift and go to state 17
+    declare                        shift and go to state 4
+    diagonal_right                 shift and go to state 12
+    fill                           shift and go to state 20
+    initialize                     shift and go to state 11
+    diagonal_left                  shift and go to state 23
+    dot                            shift and go to state 24
+    empty                          shift and go to state 6
+    call                           shift and go to state 3
+    expression                     shift and go to state 32
+    increase                       shift and go to state 19
+    inCase                         shift and go to state 28
 
 state 5
 
-    (4) declare -> DECLARE . ID SEMICOLON
-    (5) declare -> DECLARE . ID DEFAULT NUMBER SEMICOLON
+    (36) diagonal_left -> DIAGL . LPAREN sentence RPAREN SEMICOLON
 
-    ID              shift and go to state 11
+    LPAREN          shift and go to state 33
 
 
 state 6
 
-    (1) expresion -> declare .
+    (14) expression -> empty .
 
-    RBRACKET        reduce using rule 1 (expresion -> declare .)
-    $end            reduce using rule 1 (expresion -> declare .)
+    $end            reduce using rule 14 (expression -> empty .)
+    TOFIND          reduce using rule 14 (expression -> empty .)
+    RBRACKET        reduce using rule 14 (expression -> empty .)
+    ENDFROM         reduce using rule 14 (expression -> empty .)
 
 
 state 7
 
-    (8) when1 -> WHEN . ID CONDITION sentence THEN LBRACKET expresion RBRACKET when1
+    (37) diagonal_right -> DIAGR . LPAREN sentence RPAREN SEMICOLON
 
-    ID              shift and go to state 12
+    LPAREN          shift and go to state 34
 
 
 state 8
 
-    (6) inCase -> INCASE when1 . ifnot ENDINCASE SEMICOLON
-    (10) ifnot -> . IFNOT LBRACKET expresion RBRACKET
+    (29) dot -> DOT . LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON
 
-    IFNOT           shift and go to state 14
+    LPAREN          shift and go to state 35
 
-    ifnot                          shift and go to state 13
 
 state 9
 
-    (9) when1 -> empty .
+    (0) S' -> expression .
 
-    IFNOT           reduce using rule 9 (when1 -> empty .)
 
 
 state 10
 
-    (7) inCase -> INCASE ID . when2 ifnot ENDINCASE SEMICOLON
-    (11) when2 -> . WHEN CONDITION sentence THEN LBRACKET expresion RBRACKET when2
-    (12) when2 -> . empty
-    (16) empty -> .
+    (32) initialize -> INITIALIZE . LPAREN ID RPAREN SEMICOLON
 
-    WHEN            shift and go to state 15
-    IFNOT           reduce using rule 16 (empty -> .)
+    LPAREN          shift and go to state 36
 
-    empty                          shift and go to state 16
-    when2                          shift and go to state 17
 
 state 11
 
-    (4) declare -> DECLARE ID . SEMICOLON
-    (5) declare -> DECLARE ID . DEFAULT NUMBER SEMICOLON
+    (6) expression -> initialize . expression
+    (1) expression -> . declare expression
+    (2) expression -> . inCase expression
+    (3) expression -> . repeat expression
+    (4) expression -> . since expression
+    (5) expression -> . dot expression
+    (6) expression -> . initialize expression
+    (7) expression -> . fill expression
+    (8) expression -> . increase expression
+    (9) expression -> . decrease expression
+    (10) expression -> . diagonal_right expression
+    (11) expression -> . diagonal_left expression
+    (12) expression -> . procedure expression
+    (13) expression -> . call expression
+    (14) expression -> . empty
+    (15) declare -> . DECLARE ID SEMICOLON
+    (16) declare -> . DECLARE ID DEFAULT NUMBER SEMICOLON
+    (17) inCase -> . INCASE when1 ifnot ENDINCASE SEMICOLON
+    (18) inCase -> . INCASE ID when2 ifnot ENDINCASE SEMICOLON
+    (26) repeat -> . REPEAT expression until_find SEMICOLON
+    (28) since -> . FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON
+    (29) dot -> . DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON
+    (32) initialize -> . INITIALIZE LPAREN ID RPAREN SEMICOLON
+    (33) fill -> . FILL LPAREN fillSentence RPAREN SEMICOLON
+    (30) increase -> . INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (31) decrease -> . DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (37) diagonal_right -> . DIAGR LPAREN sentence RPAREN SEMICOLON
+    (36) diagonal_left -> . DIAGL LPAREN sentence RPAREN SEMICOLON
+    (58) procedure -> . PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON
+    (66) call -> . CALL ID LPAREN params_call RPAREN SEMICOLON
+    (38) empty -> .
 
-    SEMICOLON       shift and go to state 19
-    DEFAULT         shift and go to state 18
+    DECLARE         shift and go to state 25
+    INCASE          shift and go to state 14
+    REPEAT          shift and go to state 18
+    FROM            shift and go to state 26
+    DOT             shift and go to state 8
+    INITIALIZE      shift and go to state 10
+    FILL            shift and go to state 2
+    INCREASE        shift and go to state 21
+    DECREASE        shift and go to state 27
+    DIAGR           shift and go to state 7
+    DIAGL           shift and go to state 5
+    PROCEDURE       shift and go to state 22
+    CALL            shift and go to state 16
+    $end            reduce using rule 38 (empty -> .)
+    TOFIND          reduce using rule 38 (empty -> .)
+    RBRACKET        reduce using rule 38 (empty -> .)
+    ENDFROM         reduce using rule 38 (empty -> .)
 
+    repeat                         shift and go to state 13
+    decrease                       shift and go to state 15
+    procedure                      shift and go to state 1
+    since                          shift and go to state 17
+    declare                        shift and go to state 4
+    diagonal_right                 shift and go to state 12
+    fill                           shift and go to state 20
+    initialize                     shift and go to state 11
+    diagonal_left                  shift and go to state 23
+    dot                            shift and go to state 24
+    empty                          shift and go to state 6
+    call                           shift and go to state 3
+    expression                     shift and go to state 37
+    increase                       shift and go to state 19
+    inCase                         shift and go to state 28
 
 state 12
 
-    (8) when1 -> WHEN ID . CONDITION sentence THEN LBRACKET expresion RBRACKET when1
+    (10) expression -> diagonal_right . expression
+    (1) expression -> . declare expression
+    (2) expression -> . inCase expression
+    (3) expression -> . repeat expression
+    (4) expression -> . since expression
+    (5) expression -> . dot expression
+    (6) expression -> . initialize expression
+    (7) expression -> . fill expression
+    (8) expression -> . increase expression
+    (9) expression -> . decrease expression
+    (10) expression -> . diagonal_right expression
+    (11) expression -> . diagonal_left expression
+    (12) expression -> . procedure expression
+    (13) expression -> . call expression
+    (14) expression -> . empty
+    (15) declare -> . DECLARE ID SEMICOLON
+    (16) declare -> . DECLARE ID DEFAULT NUMBER SEMICOLON
+    (17) inCase -> . INCASE when1 ifnot ENDINCASE SEMICOLON
+    (18) inCase -> . INCASE ID when2 ifnot ENDINCASE SEMICOLON
+    (26) repeat -> . REPEAT expression until_find SEMICOLON
+    (28) since -> . FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON
+    (29) dot -> . DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON
+    (32) initialize -> . INITIALIZE LPAREN ID RPAREN SEMICOLON
+    (33) fill -> . FILL LPAREN fillSentence RPAREN SEMICOLON
+    (30) increase -> . INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (31) decrease -> . DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (37) diagonal_right -> . DIAGR LPAREN sentence RPAREN SEMICOLON
+    (36) diagonal_left -> . DIAGL LPAREN sentence RPAREN SEMICOLON
+    (58) procedure -> . PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON
+    (66) call -> . CALL ID LPAREN params_call RPAREN SEMICOLON
+    (38) empty -> .
 
-    CONDITION       shift and go to state 20
+    DECLARE         shift and go to state 25
+    INCASE          shift and go to state 14
+    REPEAT          shift and go to state 18
+    FROM            shift and go to state 26
+    DOT             shift and go to state 8
+    INITIALIZE      shift and go to state 10
+    FILL            shift and go to state 2
+    INCREASE        shift and go to state 21
+    DECREASE        shift and go to state 27
+    DIAGR           shift and go to state 7
+    DIAGL           shift and go to state 5
+    PROCEDURE       shift and go to state 22
+    CALL            shift and go to state 16
+    $end            reduce using rule 38 (empty -> .)
+    TOFIND          reduce using rule 38 (empty -> .)
+    RBRACKET        reduce using rule 38 (empty -> .)
+    ENDFROM         reduce using rule 38 (empty -> .)
 
+    repeat                         shift and go to state 13
+    decrease                       shift and go to state 15
+    procedure                      shift and go to state 1
+    since                          shift and go to state 17
+    declare                        shift and go to state 4
+    diagonal_right                 shift and go to state 12
+    fill                           shift and go to state 20
+    initialize                     shift and go to state 11
+    diagonal_left                  shift and go to state 23
+    dot                            shift and go to state 24
+    empty                          shift and go to state 6
+    call                           shift and go to state 3
+    expression                     shift and go to state 38
+    increase                       shift and go to state 19
+    inCase                         shift and go to state 28
 
 state 13
 
-    (6) inCase -> INCASE when1 ifnot . ENDINCASE SEMICOLON
+    (3) expression -> repeat . expression
+    (1) expression -> . declare expression
+    (2) expression -> . inCase expression
+    (3) expression -> . repeat expression
+    (4) expression -> . since expression
+    (5) expression -> . dot expression
+    (6) expression -> . initialize expression
+    (7) expression -> . fill expression
+    (8) expression -> . increase expression
+    (9) expression -> . decrease expression
+    (10) expression -> . diagonal_right expression
+    (11) expression -> . diagonal_left expression
+    (12) expression -> . procedure expression
+    (13) expression -> . call expression
+    (14) expression -> . empty
+    (15) declare -> . DECLARE ID SEMICOLON
+    (16) declare -> . DECLARE ID DEFAULT NUMBER SEMICOLON
+    (17) inCase -> . INCASE when1 ifnot ENDINCASE SEMICOLON
+    (18) inCase -> . INCASE ID when2 ifnot ENDINCASE SEMICOLON
+    (26) repeat -> . REPEAT expression until_find SEMICOLON
+    (28) since -> . FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON
+    (29) dot -> . DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON
+    (32) initialize -> . INITIALIZE LPAREN ID RPAREN SEMICOLON
+    (33) fill -> . FILL LPAREN fillSentence RPAREN SEMICOLON
+    (30) increase -> . INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (31) decrease -> . DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (37) diagonal_right -> . DIAGR LPAREN sentence RPAREN SEMICOLON
+    (36) diagonal_left -> . DIAGL LPAREN sentence RPAREN SEMICOLON
+    (58) procedure -> . PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON
+    (66) call -> . CALL ID LPAREN params_call RPAREN SEMICOLON
+    (38) empty -> .
 
-    ENDINCASE       shift and go to state 21
+    DECLARE         shift and go to state 25
+    INCASE          shift and go to state 14
+    REPEAT          shift and go to state 18
+    FROM            shift and go to state 26
+    DOT             shift and go to state 8
+    INITIALIZE      shift and go to state 10
+    FILL            shift and go to state 2
+    INCREASE        shift and go to state 21
+    DECREASE        shift and go to state 27
+    DIAGR           shift and go to state 7
+    DIAGL           shift and go to state 5
+    PROCEDURE       shift and go to state 22
+    CALL            shift and go to state 16
+    $end            reduce using rule 38 (empty -> .)
+    TOFIND          reduce using rule 38 (empty -> .)
+    RBRACKET        reduce using rule 38 (empty -> .)
+    ENDFROM         reduce using rule 38 (empty -> .)
 
+    repeat                         shift and go to state 13
+    decrease                       shift and go to state 15
+    procedure                      shift and go to state 1
+    since                          shift and go to state 17
+    declare                        shift and go to state 4
+    diagonal_right                 shift and go to state 12
+    fill                           shift and go to state 20
+    initialize                     shift and go to state 11
+    diagonal_left                  shift and go to state 23
+    dot                            shift and go to state 24
+    empty                          shift and go to state 6
+    call                           shift and go to state 3
+    expression                     shift and go to state 39
+    increase                       shift and go to state 19
+    inCase                         shift and go to state 28
 
 state 14
 
-    (10) ifnot -> IFNOT . LBRACKET expresion RBRACKET
+    (17) inCase -> INCASE . when1 ifnot ENDINCASE SEMICOLON
+    (18) inCase -> INCASE . ID when2 ifnot ENDINCASE SEMICOLON
+    (19) when1 -> . WHEN ID CONDITION sentence THEN LBRACKET expression RBRACKET when1
+    (20) when1 -> . empty
+    (38) empty -> .
 
-    LBRACKET        shift and go to state 22
+    ID              shift and go to state 40
+    WHEN            shift and go to state 41
+    IFNOT           reduce using rule 38 (empty -> .)
 
+    empty                          shift and go to state 42
+    when1                          shift and go to state 43
 
 state 15
 
-    (11) when2 -> WHEN . CONDITION sentence THEN LBRACKET expresion RBRACKET when2
+    (9) expression -> decrease . expression
+    (1) expression -> . declare expression
+    (2) expression -> . inCase expression
+    (3) expression -> . repeat expression
+    (4) expression -> . since expression
+    (5) expression -> . dot expression
+    (6) expression -> . initialize expression
+    (7) expression -> . fill expression
+    (8) expression -> . increase expression
+    (9) expression -> . decrease expression
+    (10) expression -> . diagonal_right expression
+    (11) expression -> . diagonal_left expression
+    (12) expression -> . procedure expression
+    (13) expression -> . call expression
+    (14) expression -> . empty
+    (15) declare -> . DECLARE ID SEMICOLON
+    (16) declare -> . DECLARE ID DEFAULT NUMBER SEMICOLON
+    (17) inCase -> . INCASE when1 ifnot ENDINCASE SEMICOLON
+    (18) inCase -> . INCASE ID when2 ifnot ENDINCASE SEMICOLON
+    (26) repeat -> . REPEAT expression until_find SEMICOLON
+    (28) since -> . FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON
+    (29) dot -> . DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON
+    (32) initialize -> . INITIALIZE LPAREN ID RPAREN SEMICOLON
+    (33) fill -> . FILL LPAREN fillSentence RPAREN SEMICOLON
+    (30) increase -> . INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (31) decrease -> . DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (37) diagonal_right -> . DIAGR LPAREN sentence RPAREN SEMICOLON
+    (36) diagonal_left -> . DIAGL LPAREN sentence RPAREN SEMICOLON
+    (58) procedure -> . PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON
+    (66) call -> . CALL ID LPAREN params_call RPAREN SEMICOLON
+    (38) empty -> .
 
-    CONDITION       shift and go to state 23
+    DECLARE         shift and go to state 25
+    INCASE          shift and go to state 14
+    REPEAT          shift and go to state 18
+    FROM            shift and go to state 26
+    DOT             shift and go to state 8
+    INITIALIZE      shift and go to state 10
+    FILL            shift and go to state 2
+    INCREASE        shift and go to state 21
+    DECREASE        shift and go to state 27
+    DIAGR           shift and go to state 7
+    DIAGL           shift and go to state 5
+    PROCEDURE       shift and go to state 22
+    CALL            shift and go to state 16
+    $end            reduce using rule 38 (empty -> .)
+    TOFIND          reduce using rule 38 (empty -> .)
+    RBRACKET        reduce using rule 38 (empty -> .)
+    ENDFROM         reduce using rule 38 (empty -> .)
 
+    repeat                         shift and go to state 13
+    decrease                       shift and go to state 15
+    procedure                      shift and go to state 1
+    since                          shift and go to state 17
+    declare                        shift and go to state 4
+    diagonal_right                 shift and go to state 12
+    fill                           shift and go to state 20
+    initialize                     shift and go to state 11
+    diagonal_left                  shift and go to state 23
+    dot                            shift and go to state 24
+    empty                          shift and go to state 6
+    call                           shift and go to state 3
+    expression                     shift and go to state 44
+    increase                       shift and go to state 19
+    inCase                         shift and go to state 28
 
 state 16
 
-    (12) when2 -> empty .
+    (66) call -> CALL . ID LPAREN params_call RPAREN SEMICOLON
 
-    IFNOT           reduce using rule 12 (when2 -> empty .)
+    ID              shift and go to state 45
 
 
 state 17
 
-    (7) inCase -> INCASE ID when2 . ifnot ENDINCASE SEMICOLON
-    (10) ifnot -> . IFNOT LBRACKET expresion RBRACKET
+    (4) expression -> since . expression
+    (1) expression -> . declare expression
+    (2) expression -> . inCase expression
+    (3) expression -> . repeat expression
+    (4) expression -> . since expression
+    (5) expression -> . dot expression
+    (6) expression -> . initialize expression
+    (7) expression -> . fill expression
+    (8) expression -> . increase expression
+    (9) expression -> . decrease expression
+    (10) expression -> . diagonal_right expression
+    (11) expression -> . diagonal_left expression
+    (12) expression -> . procedure expression
+    (13) expression -> . call expression
+    (14) expression -> . empty
+    (15) declare -> . DECLARE ID SEMICOLON
+    (16) declare -> . DECLARE ID DEFAULT NUMBER SEMICOLON
+    (17) inCase -> . INCASE when1 ifnot ENDINCASE SEMICOLON
+    (18) inCase -> . INCASE ID when2 ifnot ENDINCASE SEMICOLON
+    (26) repeat -> . REPEAT expression until_find SEMICOLON
+    (28) since -> . FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON
+    (29) dot -> . DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON
+    (32) initialize -> . INITIALIZE LPAREN ID RPAREN SEMICOLON
+    (33) fill -> . FILL LPAREN fillSentence RPAREN SEMICOLON
+    (30) increase -> . INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (31) decrease -> . DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (37) diagonal_right -> . DIAGR LPAREN sentence RPAREN SEMICOLON
+    (36) diagonal_left -> . DIAGL LPAREN sentence RPAREN SEMICOLON
+    (58) procedure -> . PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON
+    (66) call -> . CALL ID LPAREN params_call RPAREN SEMICOLON
+    (38) empty -> .
 
-    IFNOT           shift and go to state 14
+    DECLARE         shift and go to state 25
+    INCASE          shift and go to state 14
+    REPEAT          shift and go to state 18
+    FROM            shift and go to state 26
+    DOT             shift and go to state 8
+    INITIALIZE      shift and go to state 10
+    FILL            shift and go to state 2
+    INCREASE        shift and go to state 21
+    DECREASE        shift and go to state 27
+    DIAGR           shift and go to state 7
+    DIAGL           shift and go to state 5
+    PROCEDURE       shift and go to state 22
+    CALL            shift and go to state 16
+    $end            reduce using rule 38 (empty -> .)
+    TOFIND          reduce using rule 38 (empty -> .)
+    RBRACKET        reduce using rule 38 (empty -> .)
+    ENDFROM         reduce using rule 38 (empty -> .)
 
-    ifnot                          shift and go to state 24
+    repeat                         shift and go to state 13
+    decrease                       shift and go to state 15
+    procedure                      shift and go to state 1
+    since                          shift and go to state 17
+    declare                        shift and go to state 4
+    diagonal_right                 shift and go to state 12
+    fill                           shift and go to state 20
+    initialize                     shift and go to state 11
+    diagonal_left                  shift and go to state 23
+    dot                            shift and go to state 24
+    empty                          shift and go to state 6
+    call                           shift and go to state 3
+    expression                     shift and go to state 46
+    increase                       shift and go to state 19
+    inCase                         shift and go to state 28
 
 state 18
 
-    (5) declare -> DECLARE ID DEFAULT . NUMBER SEMICOLON
+    (26) repeat -> REPEAT . expression until_find SEMICOLON
+    (1) expression -> . declare expression
+    (2) expression -> . inCase expression
+    (3) expression -> . repeat expression
+    (4) expression -> . since expression
+    (5) expression -> . dot expression
+    (6) expression -> . initialize expression
+    (7) expression -> . fill expression
+    (8) expression -> . increase expression
+    (9) expression -> . decrease expression
+    (10) expression -> . diagonal_right expression
+    (11) expression -> . diagonal_left expression
+    (12) expression -> . procedure expression
+    (13) expression -> . call expression
+    (14) expression -> . empty
+    (15) declare -> . DECLARE ID SEMICOLON
+    (16) declare -> . DECLARE ID DEFAULT NUMBER SEMICOLON
+    (17) inCase -> . INCASE when1 ifnot ENDINCASE SEMICOLON
+    (18) inCase -> . INCASE ID when2 ifnot ENDINCASE SEMICOLON
+    (26) repeat -> . REPEAT expression until_find SEMICOLON
+    (28) since -> . FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON
+    (29) dot -> . DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON
+    (32) initialize -> . INITIALIZE LPAREN ID RPAREN SEMICOLON
+    (33) fill -> . FILL LPAREN fillSentence RPAREN SEMICOLON
+    (30) increase -> . INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (31) decrease -> . DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (37) diagonal_right -> . DIAGR LPAREN sentence RPAREN SEMICOLON
+    (36) diagonal_left -> . DIAGL LPAREN sentence RPAREN SEMICOLON
+    (58) procedure -> . PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON
+    (66) call -> . CALL ID LPAREN params_call RPAREN SEMICOLON
+    (38) empty -> .
 
-    NUMBER          shift and go to state 25
+    DECLARE         shift and go to state 25
+    INCASE          shift and go to state 14
+    REPEAT          shift and go to state 18
+    FROM            shift and go to state 26
+    DOT             shift and go to state 8
+    INITIALIZE      shift and go to state 10
+    FILL            shift and go to state 2
+    INCREASE        shift and go to state 21
+    DECREASE        shift and go to state 27
+    DIAGR           shift and go to state 7
+    DIAGL           shift and go to state 5
+    PROCEDURE       shift and go to state 22
+    CALL            shift and go to state 16
+    TOFIND          reduce using rule 38 (empty -> .)
 
+    repeat                         shift and go to state 13
+    decrease                       shift and go to state 15
+    procedure                      shift and go to state 1
+    since                          shift and go to state 17
+    declare                        shift and go to state 4
+    diagonal_right                 shift and go to state 12
+    fill                           shift and go to state 20
+    initialize                     shift and go to state 11
+    diagonal_left                  shift and go to state 23
+    dot                            shift and go to state 24
+    empty                          shift and go to state 6
+    call                           shift and go to state 3
+    expression                     shift and go to state 47
+    increase                       shift and go to state 19
+    inCase                         shift and go to state 28
 
 state 19
 
-    (4) declare -> DECLARE ID SEMICOLON .
+    (8) expression -> increase . expression
+    (1) expression -> . declare expression
+    (2) expression -> . inCase expression
+    (3) expression -> . repeat expression
+    (4) expression -> . since expression
+    (5) expression -> . dot expression
+    (6) expression -> . initialize expression
+    (7) expression -> . fill expression
+    (8) expression -> . increase expression
+    (9) expression -> . decrease expression
+    (10) expression -> . diagonal_right expression
+    (11) expression -> . diagonal_left expression
+    (12) expression -> . procedure expression
+    (13) expression -> . call expression
+    (14) expression -> . empty
+    (15) declare -> . DECLARE ID SEMICOLON
+    (16) declare -> . DECLARE ID DEFAULT NUMBER SEMICOLON
+    (17) inCase -> . INCASE when1 ifnot ENDINCASE SEMICOLON
+    (18) inCase -> . INCASE ID when2 ifnot ENDINCASE SEMICOLON
+    (26) repeat -> . REPEAT expression until_find SEMICOLON
+    (28) since -> . FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON
+    (29) dot -> . DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON
+    (32) initialize -> . INITIALIZE LPAREN ID RPAREN SEMICOLON
+    (33) fill -> . FILL LPAREN fillSentence RPAREN SEMICOLON
+    (30) increase -> . INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (31) decrease -> . DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (37) diagonal_right -> . DIAGR LPAREN sentence RPAREN SEMICOLON
+    (36) diagonal_left -> . DIAGL LPAREN sentence RPAREN SEMICOLON
+    (58) procedure -> . PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON
+    (66) call -> . CALL ID LPAREN params_call RPAREN SEMICOLON
+    (38) empty -> .
 
-    RBRACKET        reduce using rule 4 (declare -> DECLARE ID SEMICOLON .)
-    $end            reduce using rule 4 (declare -> DECLARE ID SEMICOLON .)
+    DECLARE         shift and go to state 25
+    INCASE          shift and go to state 14
+    REPEAT          shift and go to state 18
+    FROM            shift and go to state 26
+    DOT             shift and go to state 8
+    INITIALIZE      shift and go to state 10
+    FILL            shift and go to state 2
+    INCREASE        shift and go to state 21
+    DECREASE        shift and go to state 27
+    DIAGR           shift and go to state 7
+    DIAGL           shift and go to state 5
+    PROCEDURE       shift and go to state 22
+    CALL            shift and go to state 16
+    $end            reduce using rule 38 (empty -> .)
+    TOFIND          reduce using rule 38 (empty -> .)
+    RBRACKET        reduce using rule 38 (empty -> .)
+    ENDFROM         reduce using rule 38 (empty -> .)
 
+    repeat                         shift and go to state 13
+    decrease                       shift and go to state 15
+    procedure                      shift and go to state 1
+    since                          shift and go to state 17
+    declare                        shift and go to state 4
+    diagonal_right                 shift and go to state 12
+    fill                           shift and go to state 20
+    initialize                     shift and go to state 11
+    diagonal_left                  shift and go to state 23
+    dot                            shift and go to state 24
+    empty                          shift and go to state 6
+    call                           shift and go to state 3
+    expression                     shift and go to state 48
+    increase                       shift and go to state 19
+    inCase                         shift and go to state 28
 
 state 20
 
-    (8) when1 -> WHEN ID CONDITION . sentence THEN LBRACKET expresion RBRACKET when1
-    (13) sentence -> . ID
-    (14) sentence -> . NUMBER
+    (7) expression -> fill . expression
+    (1) expression -> . declare expression
+    (2) expression -> . inCase expression
+    (3) expression -> . repeat expression
+    (4) expression -> . since expression
+    (5) expression -> . dot expression
+    (6) expression -> . initialize expression
+    (7) expression -> . fill expression
+    (8) expression -> . increase expression
+    (9) expression -> . decrease expression
+    (10) expression -> . diagonal_right expression
+    (11) expression -> . diagonal_left expression
+    (12) expression -> . procedure expression
+    (13) expression -> . call expression
+    (14) expression -> . empty
+    (15) declare -> . DECLARE ID SEMICOLON
+    (16) declare -> . DECLARE ID DEFAULT NUMBER SEMICOLON
+    (17) inCase -> . INCASE when1 ifnot ENDINCASE SEMICOLON
+    (18) inCase -> . INCASE ID when2 ifnot ENDINCASE SEMICOLON
+    (26) repeat -> . REPEAT expression until_find SEMICOLON
+    (28) since -> . FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON
+    (29) dot -> . DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON
+    (32) initialize -> . INITIALIZE LPAREN ID RPAREN SEMICOLON
+    (33) fill -> . FILL LPAREN fillSentence RPAREN SEMICOLON
+    (30) increase -> . INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (31) decrease -> . DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (37) diagonal_right -> . DIAGR LPAREN sentence RPAREN SEMICOLON
+    (36) diagonal_left -> . DIAGL LPAREN sentence RPAREN SEMICOLON
+    (58) procedure -> . PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON
+    (66) call -> . CALL ID LPAREN params_call RPAREN SEMICOLON
+    (38) empty -> .
 
-    ID              shift and go to state 28
-    NUMBER          shift and go to state 27
+    DECLARE         shift and go to state 25
+    INCASE          shift and go to state 14
+    REPEAT          shift and go to state 18
+    FROM            shift and go to state 26
+    DOT             shift and go to state 8
+    INITIALIZE      shift and go to state 10
+    FILL            shift and go to state 2
+    INCREASE        shift and go to state 21
+    DECREASE        shift and go to state 27
+    DIAGR           shift and go to state 7
+    DIAGL           shift and go to state 5
+    PROCEDURE       shift and go to state 22
+    CALL            shift and go to state 16
+    $end            reduce using rule 38 (empty -> .)
+    TOFIND          reduce using rule 38 (empty -> .)
+    RBRACKET        reduce using rule 38 (empty -> .)
+    ENDFROM         reduce using rule 38 (empty -> .)
 
-    sentence                       shift and go to state 26
+    repeat                         shift and go to state 13
+    decrease                       shift and go to state 15
+    procedure                      shift and go to state 1
+    since                          shift and go to state 17
+    declare                        shift and go to state 4
+    diagonal_right                 shift and go to state 12
+    fill                           shift and go to state 20
+    initialize                     shift and go to state 11
+    diagonal_left                  shift and go to state 23
+    dot                            shift and go to state 24
+    empty                          shift and go to state 6
+    call                           shift and go to state 3
+    expression                     shift and go to state 49
+    increase                       shift and go to state 19
+    inCase                         shift and go to state 28
 
 state 21
 
-    (6) inCase -> INCASE when1 ifnot ENDINCASE . SEMICOLON
+    (30) increase -> INCREASE . LPAREN ID COMMA sentence RPAREN SEMICOLON
 
-    SEMICOLON       shift and go to state 29
+    LPAREN          shift and go to state 50
 
 
 state 22
 
-    (10) ifnot -> IFNOT LBRACKET . expresion RBRACKET
-    (1) expresion -> . declare
-    (2) expresion -> . inCase
-    (3) expresion -> . repeat
-    (4) declare -> . DECLARE ID SEMICOLON
-    (5) declare -> . DECLARE ID DEFAULT NUMBER SEMICOLON
-    (6) inCase -> . INCASE when1 ifnot ENDINCASE SEMICOLON
-    (7) inCase -> . INCASE ID when2 ifnot ENDINCASE SEMICOLON
-    (15) repeat -> .
+    (58) procedure -> PROCEDURE . ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON
 
-    DECLARE         shift and go to state 5
-    INCASE          shift and go to state 4
-    RBRACKET        reduce using rule 15 (repeat -> .)
+    ID              shift and go to state 51
 
-    expresion                      shift and go to state 30
-    repeat                         shift and go to state 2
-    inCase                         shift and go to state 3
-    declare                        shift and go to state 6
 
 state 23
 
-    (11) when2 -> WHEN CONDITION . sentence THEN LBRACKET expresion RBRACKET when2
-    (13) sentence -> . ID
-    (14) sentence -> . NUMBER
+    (11) expression -> diagonal_left . expression
+    (1) expression -> . declare expression
+    (2) expression -> . inCase expression
+    (3) expression -> . repeat expression
+    (4) expression -> . since expression
+    (5) expression -> . dot expression
+    (6) expression -> . initialize expression
+    (7) expression -> . fill expression
+    (8) expression -> . increase expression
+    (9) expression -> . decrease expression
+    (10) expression -> . diagonal_right expression
+    (11) expression -> . diagonal_left expression
+    (12) expression -> . procedure expression
+    (13) expression -> . call expression
+    (14) expression -> . empty
+    (15) declare -> . DECLARE ID SEMICOLON
+    (16) declare -> . DECLARE ID DEFAULT NUMBER SEMICOLON
+    (17) inCase -> . INCASE when1 ifnot ENDINCASE SEMICOLON
+    (18) inCase -> . INCASE ID when2 ifnot ENDINCASE SEMICOLON
+    (26) repeat -> . REPEAT expression until_find SEMICOLON
+    (28) since -> . FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON
+    (29) dot -> . DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON
+    (32) initialize -> . INITIALIZE LPAREN ID RPAREN SEMICOLON
+    (33) fill -> . FILL LPAREN fillSentence RPAREN SEMICOLON
+    (30) increase -> . INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (31) decrease -> . DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (37) diagonal_right -> . DIAGR LPAREN sentence RPAREN SEMICOLON
+    (36) diagonal_left -> . DIAGL LPAREN sentence RPAREN SEMICOLON
+    (58) procedure -> . PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON
+    (66) call -> . CALL ID LPAREN params_call RPAREN SEMICOLON
+    (38) empty -> .
 
-    ID              shift and go to state 28
-    NUMBER          shift and go to state 27
+    DECLARE         shift and go to state 25
+    INCASE          shift and go to state 14
+    REPEAT          shift and go to state 18
+    FROM            shift and go to state 26
+    DOT             shift and go to state 8
+    INITIALIZE      shift and go to state 10
+    FILL            shift and go to state 2
+    INCREASE        shift and go to state 21
+    DECREASE        shift and go to state 27
+    DIAGR           shift and go to state 7
+    DIAGL           shift and go to state 5
+    PROCEDURE       shift and go to state 22
+    CALL            shift and go to state 16
+    $end            reduce using rule 38 (empty -> .)
+    TOFIND          reduce using rule 38 (empty -> .)
+    RBRACKET        reduce using rule 38 (empty -> .)
+    ENDFROM         reduce using rule 38 (empty -> .)
 
-    sentence                       shift and go to state 31
+    repeat                         shift and go to state 13
+    decrease                       shift and go to state 15
+    procedure                      shift and go to state 1
+    since                          shift and go to state 17
+    declare                        shift and go to state 4
+    diagonal_right                 shift and go to state 12
+    fill                           shift and go to state 20
+    initialize                     shift and go to state 11
+    diagonal_left                  shift and go to state 23
+    dot                            shift and go to state 24
+    empty                          shift and go to state 6
+    call                           shift and go to state 3
+    expression                     shift and go to state 52
+    increase                       shift and go to state 19
+    inCase                         shift and go to state 28
 
 state 24
 
-    (7) inCase -> INCASE ID when2 ifnot . ENDINCASE SEMICOLON
+    (5) expression -> dot . expression
+    (1) expression -> . declare expression
+    (2) expression -> . inCase expression
+    (3) expression -> . repeat expression
+    (4) expression -> . since expression
+    (5) expression -> . dot expression
+    (6) expression -> . initialize expression
+    (7) expression -> . fill expression
+    (8) expression -> . increase expression
+    (9) expression -> . decrease expression
+    (10) expression -> . diagonal_right expression
+    (11) expression -> . diagonal_left expression
+    (12) expression -> . procedure expression
+    (13) expression -> . call expression
+    (14) expression -> . empty
+    (15) declare -> . DECLARE ID SEMICOLON
+    (16) declare -> . DECLARE ID DEFAULT NUMBER SEMICOLON
+    (17) inCase -> . INCASE when1 ifnot ENDINCASE SEMICOLON
+    (18) inCase -> . INCASE ID when2 ifnot ENDINCASE SEMICOLON
+    (26) repeat -> . REPEAT expression until_find SEMICOLON
+    (28) since -> . FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON
+    (29) dot -> . DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON
+    (32) initialize -> . INITIALIZE LPAREN ID RPAREN SEMICOLON
+    (33) fill -> . FILL LPAREN fillSentence RPAREN SEMICOLON
+    (30) increase -> . INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (31) decrease -> . DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (37) diagonal_right -> . DIAGR LPAREN sentence RPAREN SEMICOLON
+    (36) diagonal_left -> . DIAGL LPAREN sentence RPAREN SEMICOLON
+    (58) procedure -> . PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON
+    (66) call -> . CALL ID LPAREN params_call RPAREN SEMICOLON
+    (38) empty -> .
 
-    ENDINCASE       shift and go to state 32
+    DECLARE         shift and go to state 25
+    INCASE          shift and go to state 14
+    REPEAT          shift and go to state 18
+    FROM            shift and go to state 26
+    DOT             shift and go to state 8
+    INITIALIZE      shift and go to state 10
+    FILL            shift and go to state 2
+    INCREASE        shift and go to state 21
+    DECREASE        shift and go to state 27
+    DIAGR           shift and go to state 7
+    DIAGL           shift and go to state 5
+    PROCEDURE       shift and go to state 22
+    CALL            shift and go to state 16
+    $end            reduce using rule 38 (empty -> .)
+    TOFIND          reduce using rule 38 (empty -> .)
+    RBRACKET        reduce using rule 38 (empty -> .)
+    ENDFROM         reduce using rule 38 (empty -> .)
 
+    repeat                         shift and go to state 13
+    decrease                       shift and go to state 15
+    procedure                      shift and go to state 1
+    since                          shift and go to state 17
+    declare                        shift and go to state 4
+    diagonal_right                 shift and go to state 12
+    fill                           shift and go to state 20
+    initialize                     shift and go to state 11
+    diagonal_left                  shift and go to state 23
+    dot                            shift and go to state 24
+    empty                          shift and go to state 6
+    call                           shift and go to state 3
+    expression                     shift and go to state 53
+    increase                       shift and go to state 19
+    inCase                         shift and go to state 28
 
 state 25
 
-    (5) declare -> DECLARE ID DEFAULT NUMBER . SEMICOLON
+    (15) declare -> DECLARE . ID SEMICOLON
+    (16) declare -> DECLARE . ID DEFAULT NUMBER SEMICOLON
 
-    SEMICOLON       shift and go to state 33
+    ID              shift and go to state 54
 
 
 state 26
 
-    (8) when1 -> WHEN ID CONDITION sentence . THEN LBRACKET expresion RBRACKET when1
+    (28) since -> FROM . declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON
+    (15) declare -> . DECLARE ID SEMICOLON
+    (16) declare -> . DECLARE ID DEFAULT NUMBER SEMICOLON
 
-    THEN            shift and go to state 34
+    DECLARE         shift and go to state 25
 
+    declare                        shift and go to state 55
 
 state 27
 
-    (14) sentence -> NUMBER .
+    (31) decrease -> DECREASE . LPAREN ID COMMA sentence RPAREN SEMICOLON
 
-    THEN            reduce using rule 14 (sentence -> NUMBER .)
+    LPAREN          shift and go to state 56
 
 
 state 28
 
-    (13) sentence -> ID .
+    (2) expression -> inCase . expression
+    (1) expression -> . declare expression
+    (2) expression -> . inCase expression
+    (3) expression -> . repeat expression
+    (4) expression -> . since expression
+    (5) expression -> . dot expression
+    (6) expression -> . initialize expression
+    (7) expression -> . fill expression
+    (8) expression -> . increase expression
+    (9) expression -> . decrease expression
+    (10) expression -> . diagonal_right expression
+    (11) expression -> . diagonal_left expression
+    (12) expression -> . procedure expression
+    (13) expression -> . call expression
+    (14) expression -> . empty
+    (15) declare -> . DECLARE ID SEMICOLON
+    (16) declare -> . DECLARE ID DEFAULT NUMBER SEMICOLON
+    (17) inCase -> . INCASE when1 ifnot ENDINCASE SEMICOLON
+    (18) inCase -> . INCASE ID when2 ifnot ENDINCASE SEMICOLON
+    (26) repeat -> . REPEAT expression until_find SEMICOLON
+    (28) since -> . FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON
+    (29) dot -> . DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON
+    (32) initialize -> . INITIALIZE LPAREN ID RPAREN SEMICOLON
+    (33) fill -> . FILL LPAREN fillSentence RPAREN SEMICOLON
+    (30) increase -> . INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (31) decrease -> . DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (37) diagonal_right -> . DIAGR LPAREN sentence RPAREN SEMICOLON
+    (36) diagonal_left -> . DIAGL LPAREN sentence RPAREN SEMICOLON
+    (58) procedure -> . PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON
+    (66) call -> . CALL ID LPAREN params_call RPAREN SEMICOLON
+    (38) empty -> .
 
-    THEN            reduce using rule 13 (sentence -> ID .)
+    DECLARE         shift and go to state 25
+    INCASE          shift and go to state 14
+    REPEAT          shift and go to state 18
+    FROM            shift and go to state 26
+    DOT             shift and go to state 8
+    INITIALIZE      shift and go to state 10
+    FILL            shift and go to state 2
+    INCREASE        shift and go to state 21
+    DECREASE        shift and go to state 27
+    DIAGR           shift and go to state 7
+    DIAGL           shift and go to state 5
+    PROCEDURE       shift and go to state 22
+    CALL            shift and go to state 16
+    $end            reduce using rule 38 (empty -> .)
+    TOFIND          reduce using rule 38 (empty -> .)
+    RBRACKET        reduce using rule 38 (empty -> .)
+    ENDFROM         reduce using rule 38 (empty -> .)
 
+    repeat                         shift and go to state 13
+    decrease                       shift and go to state 15
+    procedure                      shift and go to state 1
+    since                          shift and go to state 17
+    declare                        shift and go to state 4
+    diagonal_right                 shift and go to state 12
+    fill                           shift and go to state 20
+    initialize                     shift and go to state 11
+    diagonal_left                  shift and go to state 23
+    dot                            shift and go to state 24
+    empty                          shift and go to state 6
+    call                           shift and go to state 3
+    expression                     shift and go to state 57
+    increase                       shift and go to state 19
+    inCase                         shift and go to state 28
 
 state 29
 
-    (6) inCase -> INCASE when1 ifnot ENDINCASE SEMICOLON .
+    (12) expression -> procedure expression .
 
-    $end            reduce using rule 6 (inCase -> INCASE when1 ifnot ENDINCASE SEMICOLON .)
-    RBRACKET        reduce using rule 6 (inCase -> INCASE when1 ifnot ENDINCASE SEMICOLON .)
+    $end            reduce using rule 12 (expression -> procedure expression .)
+    TOFIND          reduce using rule 12 (expression -> procedure expression .)
+    RBRACKET        reduce using rule 12 (expression -> procedure expression .)
+    ENDFROM         reduce using rule 12 (expression -> procedure expression .)
 
 
 state 30
 
-    (10) ifnot -> IFNOT LBRACKET expresion . RBRACKET
+    (33) fill -> FILL LPAREN . fillSentence RPAREN SEMICOLON
+    (34) fillSentence -> . ID
+    (35) fillSentence -> . NUMBER
 
-    RBRACKET        shift and go to state 35
+    ID              shift and go to state 59
+    NUMBER          shift and go to state 58
 
+    fillSentence                   shift and go to state 60
 
 state 31
 
-    (11) when2 -> WHEN CONDITION sentence . THEN LBRACKET expresion RBRACKET when2
+    (13) expression -> call expression .
 
-    THEN            shift and go to state 36
+    $end            reduce using rule 13 (expression -> call expression .)
+    TOFIND          reduce using rule 13 (expression -> call expression .)
+    RBRACKET        reduce using rule 13 (expression -> call expression .)
+    ENDFROM         reduce using rule 13 (expression -> call expression .)
 
 
 state 32
 
-    (7) inCase -> INCASE ID when2 ifnot ENDINCASE . SEMICOLON
+    (1) expression -> declare expression .
 
-    SEMICOLON       shift and go to state 37
+    $end            reduce using rule 1 (expression -> declare expression .)
+    TOFIND          reduce using rule 1 (expression -> declare expression .)
+    RBRACKET        reduce using rule 1 (expression -> declare expression .)
+    ENDFROM         reduce using rule 1 (expression -> declare expression .)
 
 
 state 33
 
-    (5) declare -> DECLARE ID DEFAULT NUMBER SEMICOLON .
+    (36) diagonal_left -> DIAGL LPAREN . sentence RPAREN SEMICOLON
+    (24) sentence -> . ID
+    (25) sentence -> . NUMBER
 
-    RBRACKET        reduce using rule 5 (declare -> DECLARE ID DEFAULT NUMBER SEMICOLON .)
-    $end            reduce using rule 5 (declare -> DECLARE ID DEFAULT NUMBER SEMICOLON .)
+    ID              shift and go to state 62
+    NUMBER          shift and go to state 61
 
+    sentence                       shift and go to state 63
 
 state 34
 
-    (8) when1 -> WHEN ID CONDITION sentence THEN . LBRACKET expresion RBRACKET when1
+    (37) diagonal_right -> DIAGR LPAREN . sentence RPAREN SEMICOLON
+    (24) sentence -> . ID
+    (25) sentence -> . NUMBER
 
-    LBRACKET        shift and go to state 38
+    ID              shift and go to state 62
+    NUMBER          shift and go to state 61
 
+    sentence                       shift and go to state 64
 
 state 35
 
-    (10) ifnot -> IFNOT LBRACKET expresion RBRACKET .
+    (29) dot -> DOT LPAREN . sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON
+    (24) sentence -> . ID
+    (25) sentence -> . NUMBER
 
-    ENDINCASE       reduce using rule 10 (ifnot -> IFNOT LBRACKET expresion RBRACKET .)
+    ID              shift and go to state 62
+    NUMBER          shift and go to state 61
 
+    sentence                       shift and go to state 65
 
 state 36
 
-    (11) when2 -> WHEN CONDITION sentence THEN . LBRACKET expresion RBRACKET when2
+    (32) initialize -> INITIALIZE LPAREN . ID RPAREN SEMICOLON
 
-    LBRACKET        shift and go to state 39
+    ID              shift and go to state 66
 
 
 state 37
 
-    (7) inCase -> INCASE ID when2 ifnot ENDINCASE SEMICOLON .
+    (6) expression -> initialize expression .
 
-    $end            reduce using rule 7 (inCase -> INCASE ID when2 ifnot ENDINCASE SEMICOLON .)
-    RBRACKET        reduce using rule 7 (inCase -> INCASE ID when2 ifnot ENDINCASE SEMICOLON .)
+    $end            reduce using rule 6 (expression -> initialize expression .)
+    TOFIND          reduce using rule 6 (expression -> initialize expression .)
+    RBRACKET        reduce using rule 6 (expression -> initialize expression .)
+    ENDFROM         reduce using rule 6 (expression -> initialize expression .)
 
 
 state 38
 
-    (8) when1 -> WHEN ID CONDITION sentence THEN LBRACKET . expresion RBRACKET when1
-    (1) expresion -> . declare
-    (2) expresion -> . inCase
-    (3) expresion -> . repeat
-    (4) declare -> . DECLARE ID SEMICOLON
-    (5) declare -> . DECLARE ID DEFAULT NUMBER SEMICOLON
-    (6) inCase -> . INCASE when1 ifnot ENDINCASE SEMICOLON
-    (7) inCase -> . INCASE ID when2 ifnot ENDINCASE SEMICOLON
-    (15) repeat -> .
+    (10) expression -> diagonal_right expression .
 
-    DECLARE         shift and go to state 5
-    INCASE          shift and go to state 4
-    RBRACKET        reduce using rule 15 (repeat -> .)
+    $end            reduce using rule 10 (expression -> diagonal_right expression .)
+    TOFIND          reduce using rule 10 (expression -> diagonal_right expression .)
+    RBRACKET        reduce using rule 10 (expression -> diagonal_right expression .)
+    ENDFROM         reduce using rule 10 (expression -> diagonal_right expression .)
 
-    expresion                      shift and go to state 40
-    repeat                         shift and go to state 2
-    inCase                         shift and go to state 3
-    declare                        shift and go to state 6
 
 state 39
 
-    (11) when2 -> WHEN CONDITION sentence THEN LBRACKET . expresion RBRACKET when2
-    (1) expresion -> . declare
-    (2) expresion -> . inCase
-    (3) expresion -> . repeat
-    (4) declare -> . DECLARE ID SEMICOLON
-    (5) declare -> . DECLARE ID DEFAULT NUMBER SEMICOLON
-    (6) inCase -> . INCASE when1 ifnot ENDINCASE SEMICOLON
-    (7) inCase -> . INCASE ID when2 ifnot ENDINCASE SEMICOLON
-    (15) repeat -> .
+    (3) expression -> repeat expression .
 
-    DECLARE         shift and go to state 5
-    INCASE          shift and go to state 4
-    RBRACKET        reduce using rule 15 (repeat -> .)
+    $end            reduce using rule 3 (expression -> repeat expression .)
+    TOFIND          reduce using rule 3 (expression -> repeat expression .)
+    RBRACKET        reduce using rule 3 (expression -> repeat expression .)
+    ENDFROM         reduce using rule 3 (expression -> repeat expression .)
 
-    expresion                      shift and go to state 41
-    repeat                         shift and go to state 2
-    inCase                         shift and go to state 3
-    declare                        shift and go to state 6
 
 state 40
 
-    (8) when1 -> WHEN ID CONDITION sentence THEN LBRACKET expresion . RBRACKET when1
+    (18) inCase -> INCASE ID . when2 ifnot ENDINCASE SEMICOLON
+    (21) when2 -> . WHEN CONDITION sentence THEN LBRACKET expression RBRACKET when2
+    (22) when2 -> . empty
+    (38) empty -> .
 
-    RBRACKET        shift and go to state 42
+    WHEN            shift and go to state 68
+    IFNOT           reduce using rule 38 (empty -> .)
 
+    empty                          shift and go to state 69
+    when2                          shift and go to state 67
 
 state 41
 
-    (11) when2 -> WHEN CONDITION sentence THEN LBRACKET expresion . RBRACKET when2
+    (19) when1 -> WHEN . ID CONDITION sentence THEN LBRACKET expression RBRACKET when1
 
-    RBRACKET        shift and go to state 43
+    ID              shift and go to state 70
 
 
 state 42
 
-    (8) when1 -> WHEN ID CONDITION sentence THEN LBRACKET expresion RBRACKET . when1
-    (8) when1 -> . WHEN ID CONDITION sentence THEN LBRACKET expresion RBRACKET when1
-    (9) when1 -> . empty
-    (16) empty -> .
+    (20) when1 -> empty .
 
-    WHEN            shift and go to state 7
-    IFNOT           reduce using rule 16 (empty -> .)
+    IFNOT           reduce using rule 20 (when1 -> empty .)
 
-    when1                          shift and go to state 44
-    empty                          shift and go to state 9
 
 state 43
 
-    (11) when2 -> WHEN CONDITION sentence THEN LBRACKET expresion RBRACKET . when2
-    (11) when2 -> . WHEN CONDITION sentence THEN LBRACKET expresion RBRACKET when2
-    (12) when2 -> . empty
-    (16) empty -> .
+    (17) inCase -> INCASE when1 . ifnot ENDINCASE SEMICOLON
+    (23) ifnot -> . IFNOT LBRACKET expression RBRACKET
 
-    WHEN            shift and go to state 15
-    IFNOT           reduce using rule 16 (empty -> .)
+    IFNOT           shift and go to state 72
 
-    when2                          shift and go to state 45
-    empty                          shift and go to state 16
+    ifnot                          shift and go to state 71
 
 state 44
 
-    (8) when1 -> WHEN ID CONDITION sentence THEN LBRACKET expresion RBRACKET when1 .
+    (9) expression -> decrease expression .
 
-    IFNOT           reduce using rule 8 (when1 -> WHEN ID CONDITION sentence THEN LBRACKET expresion RBRACKET when1 .)
+    $end            reduce using rule 9 (expression -> decrease expression .)
+    TOFIND          reduce using rule 9 (expression -> decrease expression .)
+    RBRACKET        reduce using rule 9 (expression -> decrease expression .)
+    ENDFROM         reduce using rule 9 (expression -> decrease expression .)
 
 
 state 45
 
-    (11) when2 -> WHEN CONDITION sentence THEN LBRACKET expresion RBRACKET when2 .
+    (66) call -> CALL ID . LPAREN params_call RPAREN SEMICOLON
 
-    IFNOT           reduce using rule 11 (when2 -> WHEN CONDITION sentence THEN LBRACKET expresion RBRACKET when2 .)
+    LPAREN          shift and go to state 73
+
+
+state 46
+
+    (4) expression -> since expression .
+
+    $end            reduce using rule 4 (expression -> since expression .)
+    TOFIND          reduce using rule 4 (expression -> since expression .)
+    RBRACKET        reduce using rule 4 (expression -> since expression .)
+    ENDFROM         reduce using rule 4 (expression -> since expression .)
+
+
+state 47
+
+    (26) repeat -> REPEAT expression . until_find SEMICOLON
+    (27) until_find -> . TOFIND sentence CONDITION sentence
+
+    TOFIND          shift and go to state 74
+
+    until_find                     shift and go to state 75
+
+state 48
+
+    (8) expression -> increase expression .
+
+    $end            reduce using rule 8 (expression -> increase expression .)
+    TOFIND          reduce using rule 8 (expression -> increase expression .)
+    RBRACKET        reduce using rule 8 (expression -> increase expression .)
+    ENDFROM         reduce using rule 8 (expression -> increase expression .)
+
+
+state 49
+
+    (7) expression -> fill expression .
+
+    $end            reduce using rule 7 (expression -> fill expression .)
+    TOFIND          reduce using rule 7 (expression -> fill expression .)
+    RBRACKET        reduce using rule 7 (expression -> fill expression .)
+    ENDFROM         reduce using rule 7 (expression -> fill expression .)
+
+
+state 50
+
+    (30) increase -> INCREASE LPAREN . ID COMMA sentence RPAREN SEMICOLON
+
+    ID              shift and go to state 76
+
+
+state 51
+
+    (58) procedure -> PROCEDURE ID . LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON
+
+    LPAREN          shift and go to state 77
+
+
+state 52
+
+    (11) expression -> diagonal_left expression .
+
+    $end            reduce using rule 11 (expression -> diagonal_left expression .)
+    TOFIND          reduce using rule 11 (expression -> diagonal_left expression .)
+    RBRACKET        reduce using rule 11 (expression -> diagonal_left expression .)
+    ENDFROM         reduce using rule 11 (expression -> diagonal_left expression .)
+
+
+state 53
+
+    (5) expression -> dot expression .
+
+    $end            reduce using rule 5 (expression -> dot expression .)
+    TOFIND          reduce using rule 5 (expression -> dot expression .)
+    RBRACKET        reduce using rule 5 (expression -> dot expression .)
+    ENDFROM         reduce using rule 5 (expression -> dot expression .)
+
+
+state 54
+
+    (15) declare -> DECLARE ID . SEMICOLON
+    (16) declare -> DECLARE ID . DEFAULT NUMBER SEMICOLON
+
+    SEMICOLON       shift and go to state 79
+    DEFAULT         shift and go to state 78
+
+
+state 55
+
+    (28) since -> FROM declare . UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON
+
+    UNTIL           shift and go to state 80
+
+
+state 56
+
+    (31) decrease -> DECREASE LPAREN . ID COMMA sentence RPAREN SEMICOLON
+
+    ID              shift and go to state 81
+
+
+state 57
+
+    (2) expression -> inCase expression .
+
+    $end            reduce using rule 2 (expression -> inCase expression .)
+    TOFIND          reduce using rule 2 (expression -> inCase expression .)
+    RBRACKET        reduce using rule 2 (expression -> inCase expression .)
+    ENDFROM         reduce using rule 2 (expression -> inCase expression .)
+
+
+state 58
+
+    (35) fillSentence -> NUMBER .
+
+    RPAREN          reduce using rule 35 (fillSentence -> NUMBER .)
+
+
+state 59
+
+    (34) fillSentence -> ID .
+
+    RPAREN          reduce using rule 34 (fillSentence -> ID .)
+
+
+state 60
+
+    (33) fill -> FILL LPAREN fillSentence . RPAREN SEMICOLON
+
+    RPAREN          shift and go to state 82
+
+
+state 61
+
+    (25) sentence -> NUMBER .
+
+    DO              reduce using rule 25 (sentence -> NUMBER .)
+    THEN            reduce using rule 25 (sentence -> NUMBER .)
+    COMMA           reduce using rule 25 (sentence -> NUMBER .)
+    RPAREN          reduce using rule 25 (sentence -> NUMBER .)
+    CONDITION       reduce using rule 25 (sentence -> NUMBER .)
+    SEMICOLON       reduce using rule 25 (sentence -> NUMBER .)
+
+
+state 62
+
+    (24) sentence -> ID .
+
+    DO              reduce using rule 24 (sentence -> ID .)
+    THEN            reduce using rule 24 (sentence -> ID .)
+    COMMA           reduce using rule 24 (sentence -> ID .)
+    RPAREN          reduce using rule 24 (sentence -> ID .)
+    CONDITION       reduce using rule 24 (sentence -> ID .)
+    SEMICOLON       reduce using rule 24 (sentence -> ID .)
+
+
+state 63
+
+    (36) diagonal_left -> DIAGL LPAREN sentence . RPAREN SEMICOLON
+
+    RPAREN          shift and go to state 83
+
+
+state 64
+
+    (37) diagonal_right -> DIAGR LPAREN sentence . RPAREN SEMICOLON
+
+    RPAREN          shift and go to state 84
+
+
+state 65
+
+    (29) dot -> DOT LPAREN sentence . COMMA sentence COMMA COLOR RPAREN SEMICOLON
+
+    COMMA           shift and go to state 85
+
+
+state 66
+
+    (32) initialize -> INITIALIZE LPAREN ID . RPAREN SEMICOLON
+
+    RPAREN          shift and go to state 86
+
+
+state 67
+
+    (18) inCase -> INCASE ID when2 . ifnot ENDINCASE SEMICOLON
+    (23) ifnot -> . IFNOT LBRACKET expression RBRACKET
+
+    IFNOT           shift and go to state 72
+
+    ifnot                          shift and go to state 87
+
+state 68
+
+    (21) when2 -> WHEN . CONDITION sentence THEN LBRACKET expression RBRACKET when2
+
+    CONDITION       shift and go to state 88
+
+
+state 69
+
+    (22) when2 -> empty .
+
+    IFNOT           reduce using rule 22 (when2 -> empty .)
+
+
+state 70
+
+    (19) when1 -> WHEN ID . CONDITION sentence THEN LBRACKET expression RBRACKET when1
+
+    CONDITION       shift and go to state 89
+
+
+state 71
+
+    (17) inCase -> INCASE when1 ifnot . ENDINCASE SEMICOLON
+
+    ENDINCASE       shift and go to state 90
+
+
+state 72
+
+    (23) ifnot -> IFNOT . LBRACKET expression RBRACKET
+
+    LBRACKET        shift and go to state 91
+
+
+state 73
+
+    (66) call -> CALL ID LPAREN . params_call RPAREN SEMICOLON
+    (59) params_call -> . oneParam_call
+    (60) params_call -> . moreParam_call
+    (61) params_call -> . empty
+    (62) oneParam_call -> . ID params_call
+    (63) oneParam_call -> . NUMBER params_call
+    (64) moreParam_call -> . COMMA ID params_call
+    (65) moreParam_call -> . COMMA NUMBER params_call
+    (38) empty -> .
+
+    ID              shift and go to state 98
+    NUMBER          shift and go to state 92
+    COMMA           shift and go to state 95
+    RPAREN          reduce using rule 38 (empty -> .)
+
+    moreParam_call                 shift and go to state 97
+    params_call                    shift and go to state 93
+    empty                          shift and go to state 94
+    oneParam_call                  shift and go to state 96
+
+state 74
+
+    (27) until_find -> TOFIND . sentence CONDITION sentence
+    (24) sentence -> . ID
+    (25) sentence -> . NUMBER
+
+    ID              shift and go to state 62
+    NUMBER          shift and go to state 61
+
+    sentence                       shift and go to state 99
+
+state 75
+
+    (26) repeat -> REPEAT expression until_find . SEMICOLON
+
+    SEMICOLON       shift and go to state 100
+
+
+state 76
+
+    (30) increase -> INCREASE LPAREN ID . COMMA sentence RPAREN SEMICOLON
+
+    COMMA           shift and go to state 101
+
+
+state 77
+
+    (58) procedure -> PROCEDURE ID LPAREN . params RPAREN localDeclare START COLON localExpression END SEMICOLON
+    (53) params -> . oneParam
+    (54) params -> . moreParam
+    (55) params -> . empty
+    (56) oneParam -> . ID params
+    (57) moreParam -> . COMMA ID params
+    (38) empty -> .
+
+    ID              shift and go to state 102
+    COMMA           shift and go to state 103
+    RPAREN          reduce using rule 38 (empty -> .)
+
+    params                         shift and go to state 105
+    empty                          shift and go to state 106
+    moreParam                      shift and go to state 104
+    oneParam                       shift and go to state 107
+
+state 78
+
+    (16) declare -> DECLARE ID DEFAULT . NUMBER SEMICOLON
+
+    NUMBER          shift and go to state 108
+
+
+state 79
+
+    (15) declare -> DECLARE ID SEMICOLON .
+
+    DECLARE         reduce using rule 15 (declare -> DECLARE ID SEMICOLON .)
+    INCASE          reduce using rule 15 (declare -> DECLARE ID SEMICOLON .)
+    REPEAT          reduce using rule 15 (declare -> DECLARE ID SEMICOLON .)
+    FROM            reduce using rule 15 (declare -> DECLARE ID SEMICOLON .)
+    DOT             reduce using rule 15 (declare -> DECLARE ID SEMICOLON .)
+    INITIALIZE      reduce using rule 15 (declare -> DECLARE ID SEMICOLON .)
+    FILL            reduce using rule 15 (declare -> DECLARE ID SEMICOLON .)
+    INCREASE        reduce using rule 15 (declare -> DECLARE ID SEMICOLON .)
+    DECREASE        reduce using rule 15 (declare -> DECLARE ID SEMICOLON .)
+    DIAGR           reduce using rule 15 (declare -> DECLARE ID SEMICOLON .)
+    DIAGL           reduce using rule 15 (declare -> DECLARE ID SEMICOLON .)
+    PROCEDURE       reduce using rule 15 (declare -> DECLARE ID SEMICOLON .)
+    CALL            reduce using rule 15 (declare -> DECLARE ID SEMICOLON .)
+    $end            reduce using rule 15 (declare -> DECLARE ID SEMICOLON .)
+    TOFIND          reduce using rule 15 (declare -> DECLARE ID SEMICOLON .)
+    RBRACKET        reduce using rule 15 (declare -> DECLARE ID SEMICOLON .)
+    ENDFROM         reduce using rule 15 (declare -> DECLARE ID SEMICOLON .)
+    UNTIL           reduce using rule 15 (declare -> DECLARE ID SEMICOLON .)
+
+
+state 80
+
+    (28) since -> FROM declare UNTIL . CONDITION sentence DO expression ENDFROM SEMICOLON
+
+    CONDITION       shift and go to state 109
+
+
+state 81
+
+    (31) decrease -> DECREASE LPAREN ID . COMMA sentence RPAREN SEMICOLON
+
+    COMMA           shift and go to state 110
+
+
+state 82
+
+    (33) fill -> FILL LPAREN fillSentence RPAREN . SEMICOLON
+
+    SEMICOLON       shift and go to state 111
+
+
+state 83
+
+    (36) diagonal_left -> DIAGL LPAREN sentence RPAREN . SEMICOLON
+
+    SEMICOLON       shift and go to state 112
+
+
+state 84
+
+    (37) diagonal_right -> DIAGR LPAREN sentence RPAREN . SEMICOLON
+
+    SEMICOLON       shift and go to state 113
+
+
+state 85
+
+    (29) dot -> DOT LPAREN sentence COMMA . sentence COMMA COLOR RPAREN SEMICOLON
+    (24) sentence -> . ID
+    (25) sentence -> . NUMBER
+
+    ID              shift and go to state 62
+    NUMBER          shift and go to state 61
+
+    sentence                       shift and go to state 114
+
+state 86
+
+    (32) initialize -> INITIALIZE LPAREN ID RPAREN . SEMICOLON
+
+    SEMICOLON       shift and go to state 115
+
+
+state 87
+
+    (18) inCase -> INCASE ID when2 ifnot . ENDINCASE SEMICOLON
+
+    ENDINCASE       shift and go to state 116
+
+
+state 88
+
+    (21) when2 -> WHEN CONDITION . sentence THEN LBRACKET expression RBRACKET when2
+    (24) sentence -> . ID
+    (25) sentence -> . NUMBER
+
+    ID              shift and go to state 62
+    NUMBER          shift and go to state 61
+
+    sentence                       shift and go to state 117
+
+state 89
+
+    (19) when1 -> WHEN ID CONDITION . sentence THEN LBRACKET expression RBRACKET when1
+    (24) sentence -> . ID
+    (25) sentence -> . NUMBER
+
+    ID              shift and go to state 62
+    NUMBER          shift and go to state 61
+
+    sentence                       shift and go to state 118
+
+state 90
+
+    (17) inCase -> INCASE when1 ifnot ENDINCASE . SEMICOLON
+
+    SEMICOLON       shift and go to state 119
+
+
+state 91
+
+    (23) ifnot -> IFNOT LBRACKET . expression RBRACKET
+    (1) expression -> . declare expression
+    (2) expression -> . inCase expression
+    (3) expression -> . repeat expression
+    (4) expression -> . since expression
+    (5) expression -> . dot expression
+    (6) expression -> . initialize expression
+    (7) expression -> . fill expression
+    (8) expression -> . increase expression
+    (9) expression -> . decrease expression
+    (10) expression -> . diagonal_right expression
+    (11) expression -> . diagonal_left expression
+    (12) expression -> . procedure expression
+    (13) expression -> . call expression
+    (14) expression -> . empty
+    (15) declare -> . DECLARE ID SEMICOLON
+    (16) declare -> . DECLARE ID DEFAULT NUMBER SEMICOLON
+    (17) inCase -> . INCASE when1 ifnot ENDINCASE SEMICOLON
+    (18) inCase -> . INCASE ID when2 ifnot ENDINCASE SEMICOLON
+    (26) repeat -> . REPEAT expression until_find SEMICOLON
+    (28) since -> . FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON
+    (29) dot -> . DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON
+    (32) initialize -> . INITIALIZE LPAREN ID RPAREN SEMICOLON
+    (33) fill -> . FILL LPAREN fillSentence RPAREN SEMICOLON
+    (30) increase -> . INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (31) decrease -> . DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (37) diagonal_right -> . DIAGR LPAREN sentence RPAREN SEMICOLON
+    (36) diagonal_left -> . DIAGL LPAREN sentence RPAREN SEMICOLON
+    (58) procedure -> . PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON
+    (66) call -> . CALL ID LPAREN params_call RPAREN SEMICOLON
+    (38) empty -> .
+
+    DECLARE         shift and go to state 25
+    INCASE          shift and go to state 14
+    REPEAT          shift and go to state 18
+    FROM            shift and go to state 26
+    DOT             shift and go to state 8
+    INITIALIZE      shift and go to state 10
+    FILL            shift and go to state 2
+    INCREASE        shift and go to state 21
+    DECREASE        shift and go to state 27
+    DIAGR           shift and go to state 7
+    DIAGL           shift and go to state 5
+    PROCEDURE       shift and go to state 22
+    CALL            shift and go to state 16
+    RBRACKET        reduce using rule 38 (empty -> .)
+
+    repeat                         shift and go to state 13
+    decrease                       shift and go to state 15
+    procedure                      shift and go to state 1
+    since                          shift and go to state 17
+    declare                        shift and go to state 4
+    diagonal_right                 shift and go to state 12
+    fill                           shift and go to state 20
+    initialize                     shift and go to state 11
+    diagonal_left                  shift and go to state 23
+    dot                            shift and go to state 24
+    empty                          shift and go to state 6
+    call                           shift and go to state 3
+    expression                     shift and go to state 120
+    increase                       shift and go to state 19
+    inCase                         shift and go to state 28
+
+state 92
+
+    (63) oneParam_call -> NUMBER . params_call
+    (59) params_call -> . oneParam_call
+    (60) params_call -> . moreParam_call
+    (61) params_call -> . empty
+    (62) oneParam_call -> . ID params_call
+    (63) oneParam_call -> . NUMBER params_call
+    (64) moreParam_call -> . COMMA ID params_call
+    (65) moreParam_call -> . COMMA NUMBER params_call
+    (38) empty -> .
+
+    ID              shift and go to state 98
+    NUMBER          shift and go to state 92
+    COMMA           shift and go to state 95
+    RPAREN          reduce using rule 38 (empty -> .)
+
+    moreParam_call                 shift and go to state 97
+    params_call                    shift and go to state 121
+    empty                          shift and go to state 94
+    oneParam_call                  shift and go to state 96
+
+state 93
+
+    (66) call -> CALL ID LPAREN params_call . RPAREN SEMICOLON
+
+    RPAREN          shift and go to state 122
+
+
+state 94
+
+    (61) params_call -> empty .
+
+    RPAREN          reduce using rule 61 (params_call -> empty .)
+
+
+state 95
+
+    (64) moreParam_call -> COMMA . ID params_call
+    (65) moreParam_call -> COMMA . NUMBER params_call
+
+    ID              shift and go to state 124
+    NUMBER          shift and go to state 123
+
+
+state 96
+
+    (59) params_call -> oneParam_call .
+
+    RPAREN          reduce using rule 59 (params_call -> oneParam_call .)
+
+
+state 97
+
+    (60) params_call -> moreParam_call .
+
+    RPAREN          reduce using rule 60 (params_call -> moreParam_call .)
+
+
+state 98
+
+    (62) oneParam_call -> ID . params_call
+    (59) params_call -> . oneParam_call
+    (60) params_call -> . moreParam_call
+    (61) params_call -> . empty
+    (62) oneParam_call -> . ID params_call
+    (63) oneParam_call -> . NUMBER params_call
+    (64) moreParam_call -> . COMMA ID params_call
+    (65) moreParam_call -> . COMMA NUMBER params_call
+    (38) empty -> .
+
+    ID              shift and go to state 98
+    NUMBER          shift and go to state 92
+    COMMA           shift and go to state 95
+    RPAREN          reduce using rule 38 (empty -> .)
+
+    moreParam_call                 shift and go to state 97
+    params_call                    shift and go to state 125
+    empty                          shift and go to state 94
+    oneParam_call                  shift and go to state 96
+
+state 99
+
+    (27) until_find -> TOFIND sentence . CONDITION sentence
+
+    CONDITION       shift and go to state 126
+
+
+state 100
+
+    (26) repeat -> REPEAT expression until_find SEMICOLON .
+
+    INCASE          reduce using rule 26 (repeat -> REPEAT expression until_find SEMICOLON .)
+    REPEAT          reduce using rule 26 (repeat -> REPEAT expression until_find SEMICOLON .)
+    FROM            reduce using rule 26 (repeat -> REPEAT expression until_find SEMICOLON .)
+    DOT             reduce using rule 26 (repeat -> REPEAT expression until_find SEMICOLON .)
+    INITIALIZE      reduce using rule 26 (repeat -> REPEAT expression until_find SEMICOLON .)
+    FILL            reduce using rule 26 (repeat -> REPEAT expression until_find SEMICOLON .)
+    INCREASE        reduce using rule 26 (repeat -> REPEAT expression until_find SEMICOLON .)
+    DECREASE        reduce using rule 26 (repeat -> REPEAT expression until_find SEMICOLON .)
+    DIAGR           reduce using rule 26 (repeat -> REPEAT expression until_find SEMICOLON .)
+    DIAGL           reduce using rule 26 (repeat -> REPEAT expression until_find SEMICOLON .)
+    PROCEDURE       reduce using rule 26 (repeat -> REPEAT expression until_find SEMICOLON .)
+    END             reduce using rule 26 (repeat -> REPEAT expression until_find SEMICOLON .)
+    DECLARE         reduce using rule 26 (repeat -> REPEAT expression until_find SEMICOLON .)
+    CALL            reduce using rule 26 (repeat -> REPEAT expression until_find SEMICOLON .)
+    $end            reduce using rule 26 (repeat -> REPEAT expression until_find SEMICOLON .)
+    TOFIND          reduce using rule 26 (repeat -> REPEAT expression until_find SEMICOLON .)
+    RBRACKET        reduce using rule 26 (repeat -> REPEAT expression until_find SEMICOLON .)
+    ENDFROM         reduce using rule 26 (repeat -> REPEAT expression until_find SEMICOLON .)
+
+
+state 101
+
+    (30) increase -> INCREASE LPAREN ID COMMA . sentence RPAREN SEMICOLON
+    (24) sentence -> . ID
+    (25) sentence -> . NUMBER
+
+    ID              shift and go to state 62
+    NUMBER          shift and go to state 61
+
+    sentence                       shift and go to state 127
+
+state 102
+
+    (56) oneParam -> ID . params
+    (53) params -> . oneParam
+    (54) params -> . moreParam
+    (55) params -> . empty
+    (56) oneParam -> . ID params
+    (57) moreParam -> . COMMA ID params
+    (38) empty -> .
+
+    ID              shift and go to state 102
+    COMMA           shift and go to state 103
+    RPAREN          reduce using rule 38 (empty -> .)
+
+    moreParam                      shift and go to state 104
+    empty                          shift and go to state 106
+    oneParam                       shift and go to state 107
+    params                         shift and go to state 128
+
+state 103
+
+    (57) moreParam -> COMMA . ID params
+
+    ID              shift and go to state 129
+
+
+state 104
+
+    (54) params -> moreParam .
+
+    RPAREN          reduce using rule 54 (params -> moreParam .)
+
+
+state 105
+
+    (58) procedure -> PROCEDURE ID LPAREN params . RPAREN localDeclare START COLON localExpression END SEMICOLON
+
+    RPAREN          shift and go to state 130
+
+
+state 106
+
+    (55) params -> empty .
+
+    RPAREN          reduce using rule 55 (params -> empty .)
+
+
+state 107
+
+    (53) params -> oneParam .
+
+    RPAREN          reduce using rule 53 (params -> oneParam .)
+
+
+state 108
+
+    (16) declare -> DECLARE ID DEFAULT NUMBER . SEMICOLON
+
+    SEMICOLON       shift and go to state 131
+
+
+state 109
+
+    (28) since -> FROM declare UNTIL CONDITION . sentence DO expression ENDFROM SEMICOLON
+    (24) sentence -> . ID
+    (25) sentence -> . NUMBER
+
+    ID              shift and go to state 62
+    NUMBER          shift and go to state 61
+
+    sentence                       shift and go to state 132
+
+state 110
+
+    (31) decrease -> DECREASE LPAREN ID COMMA . sentence RPAREN SEMICOLON
+    (24) sentence -> . ID
+    (25) sentence -> . NUMBER
+
+    ID              shift and go to state 62
+    NUMBER          shift and go to state 61
+
+    sentence                       shift and go to state 133
+
+state 111
+
+    (33) fill -> FILL LPAREN fillSentence RPAREN SEMICOLON .
+
+    DECLARE         reduce using rule 33 (fill -> FILL LPAREN fillSentence RPAREN SEMICOLON .)
+    INCASE          reduce using rule 33 (fill -> FILL LPAREN fillSentence RPAREN SEMICOLON .)
+    REPEAT          reduce using rule 33 (fill -> FILL LPAREN fillSentence RPAREN SEMICOLON .)
+    FROM            reduce using rule 33 (fill -> FILL LPAREN fillSentence RPAREN SEMICOLON .)
+    DOT             reduce using rule 33 (fill -> FILL LPAREN fillSentence RPAREN SEMICOLON .)
+    INITIALIZE      reduce using rule 33 (fill -> FILL LPAREN fillSentence RPAREN SEMICOLON .)
+    FILL            reduce using rule 33 (fill -> FILL LPAREN fillSentence RPAREN SEMICOLON .)
+    INCREASE        reduce using rule 33 (fill -> FILL LPAREN fillSentence RPAREN SEMICOLON .)
+    DECREASE        reduce using rule 33 (fill -> FILL LPAREN fillSentence RPAREN SEMICOLON .)
+    DIAGR           reduce using rule 33 (fill -> FILL LPAREN fillSentence RPAREN SEMICOLON .)
+    DIAGL           reduce using rule 33 (fill -> FILL LPAREN fillSentence RPAREN SEMICOLON .)
+    PROCEDURE       reduce using rule 33 (fill -> FILL LPAREN fillSentence RPAREN SEMICOLON .)
+    CALL            reduce using rule 33 (fill -> FILL LPAREN fillSentence RPAREN SEMICOLON .)
+    $end            reduce using rule 33 (fill -> FILL LPAREN fillSentence RPAREN SEMICOLON .)
+    TOFIND          reduce using rule 33 (fill -> FILL LPAREN fillSentence RPAREN SEMICOLON .)
+    RBRACKET        reduce using rule 33 (fill -> FILL LPAREN fillSentence RPAREN SEMICOLON .)
+    ENDFROM         reduce using rule 33 (fill -> FILL LPAREN fillSentence RPAREN SEMICOLON .)
+    END             reduce using rule 33 (fill -> FILL LPAREN fillSentence RPAREN SEMICOLON .)
+
+
+state 112
+
+    (36) diagonal_left -> DIAGL LPAREN sentence RPAREN SEMICOLON .
+
+    DECLARE         reduce using rule 36 (diagonal_left -> DIAGL LPAREN sentence RPAREN SEMICOLON .)
+    INCASE          reduce using rule 36 (diagonal_left -> DIAGL LPAREN sentence RPAREN SEMICOLON .)
+    REPEAT          reduce using rule 36 (diagonal_left -> DIAGL LPAREN sentence RPAREN SEMICOLON .)
+    FROM            reduce using rule 36 (diagonal_left -> DIAGL LPAREN sentence RPAREN SEMICOLON .)
+    DOT             reduce using rule 36 (diagonal_left -> DIAGL LPAREN sentence RPAREN SEMICOLON .)
+    INITIALIZE      reduce using rule 36 (diagonal_left -> DIAGL LPAREN sentence RPAREN SEMICOLON .)
+    FILL            reduce using rule 36 (diagonal_left -> DIAGL LPAREN sentence RPAREN SEMICOLON .)
+    INCREASE        reduce using rule 36 (diagonal_left -> DIAGL LPAREN sentence RPAREN SEMICOLON .)
+    DECREASE        reduce using rule 36 (diagonal_left -> DIAGL LPAREN sentence RPAREN SEMICOLON .)
+    DIAGR           reduce using rule 36 (diagonal_left -> DIAGL LPAREN sentence RPAREN SEMICOLON .)
+    DIAGL           reduce using rule 36 (diagonal_left -> DIAGL LPAREN sentence RPAREN SEMICOLON .)
+    PROCEDURE       reduce using rule 36 (diagonal_left -> DIAGL LPAREN sentence RPAREN SEMICOLON .)
+    CALL            reduce using rule 36 (diagonal_left -> DIAGL LPAREN sentence RPAREN SEMICOLON .)
+    RBRACKET        reduce using rule 36 (diagonal_left -> DIAGL LPAREN sentence RPAREN SEMICOLON .)
+    END             reduce using rule 36 (diagonal_left -> DIAGL LPAREN sentence RPAREN SEMICOLON .)
+    $end            reduce using rule 36 (diagonal_left -> DIAGL LPAREN sentence RPAREN SEMICOLON .)
+    TOFIND          reduce using rule 36 (diagonal_left -> DIAGL LPAREN sentence RPAREN SEMICOLON .)
+    ENDFROM         reduce using rule 36 (diagonal_left -> DIAGL LPAREN sentence RPAREN SEMICOLON .)
+
+
+state 113
+
+    (37) diagonal_right -> DIAGR LPAREN sentence RPAREN SEMICOLON .
+
+    DECLARE         reduce using rule 37 (diagonal_right -> DIAGR LPAREN sentence RPAREN SEMICOLON .)
+    INCASE          reduce using rule 37 (diagonal_right -> DIAGR LPAREN sentence RPAREN SEMICOLON .)
+    REPEAT          reduce using rule 37 (diagonal_right -> DIAGR LPAREN sentence RPAREN SEMICOLON .)
+    FROM            reduce using rule 37 (diagonal_right -> DIAGR LPAREN sentence RPAREN SEMICOLON .)
+    DOT             reduce using rule 37 (diagonal_right -> DIAGR LPAREN sentence RPAREN SEMICOLON .)
+    INITIALIZE      reduce using rule 37 (diagonal_right -> DIAGR LPAREN sentence RPAREN SEMICOLON .)
+    FILL            reduce using rule 37 (diagonal_right -> DIAGR LPAREN sentence RPAREN SEMICOLON .)
+    INCREASE        reduce using rule 37 (diagonal_right -> DIAGR LPAREN sentence RPAREN SEMICOLON .)
+    DECREASE        reduce using rule 37 (diagonal_right -> DIAGR LPAREN sentence RPAREN SEMICOLON .)
+    DIAGR           reduce using rule 37 (diagonal_right -> DIAGR LPAREN sentence RPAREN SEMICOLON .)
+    DIAGL           reduce using rule 37 (diagonal_right -> DIAGR LPAREN sentence RPAREN SEMICOLON .)
+    PROCEDURE       reduce using rule 37 (diagonal_right -> DIAGR LPAREN sentence RPAREN SEMICOLON .)
+    CALL            reduce using rule 37 (diagonal_right -> DIAGR LPAREN sentence RPAREN SEMICOLON .)
+    $end            reduce using rule 37 (diagonal_right -> DIAGR LPAREN sentence RPAREN SEMICOLON .)
+    TOFIND          reduce using rule 37 (diagonal_right -> DIAGR LPAREN sentence RPAREN SEMICOLON .)
+    RBRACKET        reduce using rule 37 (diagonal_right -> DIAGR LPAREN sentence RPAREN SEMICOLON .)
+    ENDFROM         reduce using rule 37 (diagonal_right -> DIAGR LPAREN sentence RPAREN SEMICOLON .)
+    END             reduce using rule 37 (diagonal_right -> DIAGR LPAREN sentence RPAREN SEMICOLON .)
+
+
+state 114
+
+    (29) dot -> DOT LPAREN sentence COMMA sentence . COMMA COLOR RPAREN SEMICOLON
+
+    COMMA           shift and go to state 134
+
+
+state 115
+
+    (32) initialize -> INITIALIZE LPAREN ID RPAREN SEMICOLON .
+
+    DECLARE         reduce using rule 32 (initialize -> INITIALIZE LPAREN ID RPAREN SEMICOLON .)
+    INCASE          reduce using rule 32 (initialize -> INITIALIZE LPAREN ID RPAREN SEMICOLON .)
+    REPEAT          reduce using rule 32 (initialize -> INITIALIZE LPAREN ID RPAREN SEMICOLON .)
+    FROM            reduce using rule 32 (initialize -> INITIALIZE LPAREN ID RPAREN SEMICOLON .)
+    DOT             reduce using rule 32 (initialize -> INITIALIZE LPAREN ID RPAREN SEMICOLON .)
+    INITIALIZE      reduce using rule 32 (initialize -> INITIALIZE LPAREN ID RPAREN SEMICOLON .)
+    FILL            reduce using rule 32 (initialize -> INITIALIZE LPAREN ID RPAREN SEMICOLON .)
+    INCREASE        reduce using rule 32 (initialize -> INITIALIZE LPAREN ID RPAREN SEMICOLON .)
+    DECREASE        reduce using rule 32 (initialize -> INITIALIZE LPAREN ID RPAREN SEMICOLON .)
+    DIAGR           reduce using rule 32 (initialize -> INITIALIZE LPAREN ID RPAREN SEMICOLON .)
+    DIAGL           reduce using rule 32 (initialize -> INITIALIZE LPAREN ID RPAREN SEMICOLON .)
+    PROCEDURE       reduce using rule 32 (initialize -> INITIALIZE LPAREN ID RPAREN SEMICOLON .)
+    CALL            reduce using rule 32 (initialize -> INITIALIZE LPAREN ID RPAREN SEMICOLON .)
+    RBRACKET        reduce using rule 32 (initialize -> INITIALIZE LPAREN ID RPAREN SEMICOLON .)
+    $end            reduce using rule 32 (initialize -> INITIALIZE LPAREN ID RPAREN SEMICOLON .)
+    TOFIND          reduce using rule 32 (initialize -> INITIALIZE LPAREN ID RPAREN SEMICOLON .)
+    ENDFROM         reduce using rule 32 (initialize -> INITIALIZE LPAREN ID RPAREN SEMICOLON .)
+    END             reduce using rule 32 (initialize -> INITIALIZE LPAREN ID RPAREN SEMICOLON .)
+
+
+state 116
+
+    (18) inCase -> INCASE ID when2 ifnot ENDINCASE . SEMICOLON
+
+    SEMICOLON       shift and go to state 135
+
+
+state 117
+
+    (21) when2 -> WHEN CONDITION sentence . THEN LBRACKET expression RBRACKET when2
+
+    THEN            shift and go to state 136
+
+
+state 118
+
+    (19) when1 -> WHEN ID CONDITION sentence . THEN LBRACKET expression RBRACKET when1
+
+    THEN            shift and go to state 137
+
+
+state 119
+
+    (17) inCase -> INCASE when1 ifnot ENDINCASE SEMICOLON .
+
+    DECLARE         reduce using rule 17 (inCase -> INCASE when1 ifnot ENDINCASE SEMICOLON .)
+    INCASE          reduce using rule 17 (inCase -> INCASE when1 ifnot ENDINCASE SEMICOLON .)
+    REPEAT          reduce using rule 17 (inCase -> INCASE when1 ifnot ENDINCASE SEMICOLON .)
+    FROM            reduce using rule 17 (inCase -> INCASE when1 ifnot ENDINCASE SEMICOLON .)
+    DOT             reduce using rule 17 (inCase -> INCASE when1 ifnot ENDINCASE SEMICOLON .)
+    INITIALIZE      reduce using rule 17 (inCase -> INCASE when1 ifnot ENDINCASE SEMICOLON .)
+    FILL            reduce using rule 17 (inCase -> INCASE when1 ifnot ENDINCASE SEMICOLON .)
+    INCREASE        reduce using rule 17 (inCase -> INCASE when1 ifnot ENDINCASE SEMICOLON .)
+    DECREASE        reduce using rule 17 (inCase -> INCASE when1 ifnot ENDINCASE SEMICOLON .)
+    DIAGR           reduce using rule 17 (inCase -> INCASE when1 ifnot ENDINCASE SEMICOLON .)
+    DIAGL           reduce using rule 17 (inCase -> INCASE when1 ifnot ENDINCASE SEMICOLON .)
+    PROCEDURE       reduce using rule 17 (inCase -> INCASE when1 ifnot ENDINCASE SEMICOLON .)
+    CALL            reduce using rule 17 (inCase -> INCASE when1 ifnot ENDINCASE SEMICOLON .)
+    RBRACKET        reduce using rule 17 (inCase -> INCASE when1 ifnot ENDINCASE SEMICOLON .)
+    END             reduce using rule 17 (inCase -> INCASE when1 ifnot ENDINCASE SEMICOLON .)
+    $end            reduce using rule 17 (inCase -> INCASE when1 ifnot ENDINCASE SEMICOLON .)
+    TOFIND          reduce using rule 17 (inCase -> INCASE when1 ifnot ENDINCASE SEMICOLON .)
+    ENDFROM         reduce using rule 17 (inCase -> INCASE when1 ifnot ENDINCASE SEMICOLON .)
+
+
+state 120
+
+    (23) ifnot -> IFNOT LBRACKET expression . RBRACKET
+
+    RBRACKET        shift and go to state 138
+
+
+state 121
+
+    (63) oneParam_call -> NUMBER params_call .
+
+    RPAREN          reduce using rule 63 (oneParam_call -> NUMBER params_call .)
+
+
+state 122
+
+    (66) call -> CALL ID LPAREN params_call RPAREN . SEMICOLON
+
+    SEMICOLON       shift and go to state 139
+
+
+state 123
+
+    (65) moreParam_call -> COMMA NUMBER . params_call
+    (59) params_call -> . oneParam_call
+    (60) params_call -> . moreParam_call
+    (61) params_call -> . empty
+    (62) oneParam_call -> . ID params_call
+    (63) oneParam_call -> . NUMBER params_call
+    (64) moreParam_call -> . COMMA ID params_call
+    (65) moreParam_call -> . COMMA NUMBER params_call
+    (38) empty -> .
+
+    ID              shift and go to state 98
+    NUMBER          shift and go to state 92
+    COMMA           shift and go to state 95
+    RPAREN          reduce using rule 38 (empty -> .)
+
+    moreParam_call                 shift and go to state 97
+    params_call                    shift and go to state 140
+    empty                          shift and go to state 94
+    oneParam_call                  shift and go to state 96
+
+state 124
+
+    (64) moreParam_call -> COMMA ID . params_call
+    (59) params_call -> . oneParam_call
+    (60) params_call -> . moreParam_call
+    (61) params_call -> . empty
+    (62) oneParam_call -> . ID params_call
+    (63) oneParam_call -> . NUMBER params_call
+    (64) moreParam_call -> . COMMA ID params_call
+    (65) moreParam_call -> . COMMA NUMBER params_call
+    (38) empty -> .
+
+    ID              shift and go to state 98
+    NUMBER          shift and go to state 92
+    COMMA           shift and go to state 95
+    RPAREN          reduce using rule 38 (empty -> .)
+
+    moreParam_call                 shift and go to state 97
+    params_call                    shift and go to state 141
+    empty                          shift and go to state 94
+    oneParam_call                  shift and go to state 96
+
+state 125
+
+    (62) oneParam_call -> ID params_call .
+
+    RPAREN          reduce using rule 62 (oneParam_call -> ID params_call .)
+
+
+state 126
+
+    (27) until_find -> TOFIND sentence CONDITION . sentence
+    (24) sentence -> . ID
+    (25) sentence -> . NUMBER
+
+    ID              shift and go to state 62
+    NUMBER          shift and go to state 61
+
+    sentence                       shift and go to state 142
+
+state 127
+
+    (30) increase -> INCREASE LPAREN ID COMMA sentence . RPAREN SEMICOLON
+
+    RPAREN          shift and go to state 143
+
+
+state 128
+
+    (56) oneParam -> ID params .
+
+    RPAREN          reduce using rule 56 (oneParam -> ID params .)
+
+
+state 129
+
+    (57) moreParam -> COMMA ID . params
+    (53) params -> . oneParam
+    (54) params -> . moreParam
+    (55) params -> . empty
+    (56) oneParam -> . ID params
+    (57) moreParam -> . COMMA ID params
+    (38) empty -> .
+
+    ID              shift and go to state 102
+    COMMA           shift and go to state 103
+    RPAREN          reduce using rule 38 (empty -> .)
+
+    moreParam                      shift and go to state 104
+    empty                          shift and go to state 106
+    oneParam                       shift and go to state 107
+    params                         shift and go to state 144
+
+state 130
+
+    (58) procedure -> PROCEDURE ID LPAREN params RPAREN . localDeclare START COLON localExpression END SEMICOLON
+    (39) localDeclare -> . DECLARE ID SEMICOLON
+    (40) localDeclare -> . DECLARE ID DEFAULT NUMBER SEMICOLON
+
+    DECLARE         shift and go to state 145
+
+    localDeclare                   shift and go to state 146
+
+state 131
+
+    (16) declare -> DECLARE ID DEFAULT NUMBER SEMICOLON .
+
+    DECLARE         reduce using rule 16 (declare -> DECLARE ID DEFAULT NUMBER SEMICOLON .)
+    INCASE          reduce using rule 16 (declare -> DECLARE ID DEFAULT NUMBER SEMICOLON .)
+    REPEAT          reduce using rule 16 (declare -> DECLARE ID DEFAULT NUMBER SEMICOLON .)
+    FROM            reduce using rule 16 (declare -> DECLARE ID DEFAULT NUMBER SEMICOLON .)
+    DOT             reduce using rule 16 (declare -> DECLARE ID DEFAULT NUMBER SEMICOLON .)
+    INITIALIZE      reduce using rule 16 (declare -> DECLARE ID DEFAULT NUMBER SEMICOLON .)
+    FILL            reduce using rule 16 (declare -> DECLARE ID DEFAULT NUMBER SEMICOLON .)
+    INCREASE        reduce using rule 16 (declare -> DECLARE ID DEFAULT NUMBER SEMICOLON .)
+    DECREASE        reduce using rule 16 (declare -> DECLARE ID DEFAULT NUMBER SEMICOLON .)
+    DIAGR           reduce using rule 16 (declare -> DECLARE ID DEFAULT NUMBER SEMICOLON .)
+    DIAGL           reduce using rule 16 (declare -> DECLARE ID DEFAULT NUMBER SEMICOLON .)
+    PROCEDURE       reduce using rule 16 (declare -> DECLARE ID DEFAULT NUMBER SEMICOLON .)
+    CALL            reduce using rule 16 (declare -> DECLARE ID DEFAULT NUMBER SEMICOLON .)
+    $end            reduce using rule 16 (declare -> DECLARE ID DEFAULT NUMBER SEMICOLON .)
+    TOFIND          reduce using rule 16 (declare -> DECLARE ID DEFAULT NUMBER SEMICOLON .)
+    RBRACKET        reduce using rule 16 (declare -> DECLARE ID DEFAULT NUMBER SEMICOLON .)
+    ENDFROM         reduce using rule 16 (declare -> DECLARE ID DEFAULT NUMBER SEMICOLON .)
+    UNTIL           reduce using rule 16 (declare -> DECLARE ID DEFAULT NUMBER SEMICOLON .)
+
+
+state 132
+
+    (28) since -> FROM declare UNTIL CONDITION sentence . DO expression ENDFROM SEMICOLON
+
+    DO              shift and go to state 147
+
+
+state 133
+
+    (31) decrease -> DECREASE LPAREN ID COMMA sentence . RPAREN SEMICOLON
+
+    RPAREN          shift and go to state 148
+
+
+state 134
+
+    (29) dot -> DOT LPAREN sentence COMMA sentence COMMA . COLOR RPAREN SEMICOLON
+
+    COLOR           shift and go to state 149
+
+
+state 135
+
+    (18) inCase -> INCASE ID when2 ifnot ENDINCASE SEMICOLON .
+
+    DECLARE         reduce using rule 18 (inCase -> INCASE ID when2 ifnot ENDINCASE SEMICOLON .)
+    INCASE          reduce using rule 18 (inCase -> INCASE ID when2 ifnot ENDINCASE SEMICOLON .)
+    REPEAT          reduce using rule 18 (inCase -> INCASE ID when2 ifnot ENDINCASE SEMICOLON .)
+    FROM            reduce using rule 18 (inCase -> INCASE ID when2 ifnot ENDINCASE SEMICOLON .)
+    DOT             reduce using rule 18 (inCase -> INCASE ID when2 ifnot ENDINCASE SEMICOLON .)
+    INITIALIZE      reduce using rule 18 (inCase -> INCASE ID when2 ifnot ENDINCASE SEMICOLON .)
+    FILL            reduce using rule 18 (inCase -> INCASE ID when2 ifnot ENDINCASE SEMICOLON .)
+    INCREASE        reduce using rule 18 (inCase -> INCASE ID when2 ifnot ENDINCASE SEMICOLON .)
+    DECREASE        reduce using rule 18 (inCase -> INCASE ID when2 ifnot ENDINCASE SEMICOLON .)
+    DIAGR           reduce using rule 18 (inCase -> INCASE ID when2 ifnot ENDINCASE SEMICOLON .)
+    DIAGL           reduce using rule 18 (inCase -> INCASE ID when2 ifnot ENDINCASE SEMICOLON .)
+    PROCEDURE       reduce using rule 18 (inCase -> INCASE ID when2 ifnot ENDINCASE SEMICOLON .)
+    CALL            reduce using rule 18 (inCase -> INCASE ID when2 ifnot ENDINCASE SEMICOLON .)
+    RBRACKET        reduce using rule 18 (inCase -> INCASE ID when2 ifnot ENDINCASE SEMICOLON .)
+    END             reduce using rule 18 (inCase -> INCASE ID when2 ifnot ENDINCASE SEMICOLON .)
+    $end            reduce using rule 18 (inCase -> INCASE ID when2 ifnot ENDINCASE SEMICOLON .)
+    TOFIND          reduce using rule 18 (inCase -> INCASE ID when2 ifnot ENDINCASE SEMICOLON .)
+    ENDFROM         reduce using rule 18 (inCase -> INCASE ID when2 ifnot ENDINCASE SEMICOLON .)
+
+
+state 136
+
+    (21) when2 -> WHEN CONDITION sentence THEN . LBRACKET expression RBRACKET when2
+
+    LBRACKET        shift and go to state 150
+
+
+state 137
+
+    (19) when1 -> WHEN ID CONDITION sentence THEN . LBRACKET expression RBRACKET when1
+
+    LBRACKET        shift and go to state 151
+
+
+state 138
+
+    (23) ifnot -> IFNOT LBRACKET expression RBRACKET .
+
+    ENDINCASE       reduce using rule 23 (ifnot -> IFNOT LBRACKET expression RBRACKET .)
+
+
+state 139
+
+    (66) call -> CALL ID LPAREN params_call RPAREN SEMICOLON .
+
+    DECLARE         reduce using rule 66 (call -> CALL ID LPAREN params_call RPAREN SEMICOLON .)
+    INCASE          reduce using rule 66 (call -> CALL ID LPAREN params_call RPAREN SEMICOLON .)
+    REPEAT          reduce using rule 66 (call -> CALL ID LPAREN params_call RPAREN SEMICOLON .)
+    FROM            reduce using rule 66 (call -> CALL ID LPAREN params_call RPAREN SEMICOLON .)
+    DOT             reduce using rule 66 (call -> CALL ID LPAREN params_call RPAREN SEMICOLON .)
+    INITIALIZE      reduce using rule 66 (call -> CALL ID LPAREN params_call RPAREN SEMICOLON .)
+    FILL            reduce using rule 66 (call -> CALL ID LPAREN params_call RPAREN SEMICOLON .)
+    INCREASE        reduce using rule 66 (call -> CALL ID LPAREN params_call RPAREN SEMICOLON .)
+    DECREASE        reduce using rule 66 (call -> CALL ID LPAREN params_call RPAREN SEMICOLON .)
+    DIAGR           reduce using rule 66 (call -> CALL ID LPAREN params_call RPAREN SEMICOLON .)
+    DIAGL           reduce using rule 66 (call -> CALL ID LPAREN params_call RPAREN SEMICOLON .)
+    PROCEDURE       reduce using rule 66 (call -> CALL ID LPAREN params_call RPAREN SEMICOLON .)
+    CALL            reduce using rule 66 (call -> CALL ID LPAREN params_call RPAREN SEMICOLON .)
+    $end            reduce using rule 66 (call -> CALL ID LPAREN params_call RPAREN SEMICOLON .)
+    TOFIND          reduce using rule 66 (call -> CALL ID LPAREN params_call RPAREN SEMICOLON .)
+    RBRACKET        reduce using rule 66 (call -> CALL ID LPAREN params_call RPAREN SEMICOLON .)
+    ENDFROM         reduce using rule 66 (call -> CALL ID LPAREN params_call RPAREN SEMICOLON .)
+
+
+state 140
+
+    (65) moreParam_call -> COMMA NUMBER params_call .
+
+    RPAREN          reduce using rule 65 (moreParam_call -> COMMA NUMBER params_call .)
+
+
+state 141
+
+    (64) moreParam_call -> COMMA ID params_call .
+
+    RPAREN          reduce using rule 64 (moreParam_call -> COMMA ID params_call .)
+
+
+state 142
+
+    (27) until_find -> TOFIND sentence CONDITION sentence .
+
+    SEMICOLON       reduce using rule 27 (until_find -> TOFIND sentence CONDITION sentence .)
+
+
+state 143
+
+    (30) increase -> INCREASE LPAREN ID COMMA sentence RPAREN . SEMICOLON
+
+    SEMICOLON       shift and go to state 152
+
+
+state 144
+
+    (57) moreParam -> COMMA ID params .
+
+    RPAREN          reduce using rule 57 (moreParam -> COMMA ID params .)
+
+
+state 145
+
+    (39) localDeclare -> DECLARE . ID SEMICOLON
+    (40) localDeclare -> DECLARE . ID DEFAULT NUMBER SEMICOLON
+
+    ID              shift and go to state 153
+
+
+state 146
+
+    (58) procedure -> PROCEDURE ID LPAREN params RPAREN localDeclare . START COLON localExpression END SEMICOLON
+
+    START           shift and go to state 154
+
+
+state 147
+
+    (28) since -> FROM declare UNTIL CONDITION sentence DO . expression ENDFROM SEMICOLON
+    (1) expression -> . declare expression
+    (2) expression -> . inCase expression
+    (3) expression -> . repeat expression
+    (4) expression -> . since expression
+    (5) expression -> . dot expression
+    (6) expression -> . initialize expression
+    (7) expression -> . fill expression
+    (8) expression -> . increase expression
+    (9) expression -> . decrease expression
+    (10) expression -> . diagonal_right expression
+    (11) expression -> . diagonal_left expression
+    (12) expression -> . procedure expression
+    (13) expression -> . call expression
+    (14) expression -> . empty
+    (15) declare -> . DECLARE ID SEMICOLON
+    (16) declare -> . DECLARE ID DEFAULT NUMBER SEMICOLON
+    (17) inCase -> . INCASE when1 ifnot ENDINCASE SEMICOLON
+    (18) inCase -> . INCASE ID when2 ifnot ENDINCASE SEMICOLON
+    (26) repeat -> . REPEAT expression until_find SEMICOLON
+    (28) since -> . FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON
+    (29) dot -> . DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON
+    (32) initialize -> . INITIALIZE LPAREN ID RPAREN SEMICOLON
+    (33) fill -> . FILL LPAREN fillSentence RPAREN SEMICOLON
+    (30) increase -> . INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (31) decrease -> . DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (37) diagonal_right -> . DIAGR LPAREN sentence RPAREN SEMICOLON
+    (36) diagonal_left -> . DIAGL LPAREN sentence RPAREN SEMICOLON
+    (58) procedure -> . PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON
+    (66) call -> . CALL ID LPAREN params_call RPAREN SEMICOLON
+    (38) empty -> .
+
+    DECLARE         shift and go to state 25
+    INCASE          shift and go to state 14
+    REPEAT          shift and go to state 18
+    FROM            shift and go to state 26
+    DOT             shift and go to state 8
+    INITIALIZE      shift and go to state 10
+    FILL            shift and go to state 2
+    INCREASE        shift and go to state 21
+    DECREASE        shift and go to state 27
+    DIAGR           shift and go to state 7
+    DIAGL           shift and go to state 5
+    PROCEDURE       shift and go to state 22
+    CALL            shift and go to state 16
+    ENDFROM         reduce using rule 38 (empty -> .)
+
+    repeat                         shift and go to state 13
+    decrease                       shift and go to state 15
+    procedure                      shift and go to state 1
+    since                          shift and go to state 17
+    declare                        shift and go to state 4
+    diagonal_right                 shift and go to state 12
+    fill                           shift and go to state 20
+    initialize                     shift and go to state 11
+    diagonal_left                  shift and go to state 23
+    dot                            shift and go to state 24
+    empty                          shift and go to state 6
+    call                           shift and go to state 3
+    expression                     shift and go to state 155
+    increase                       shift and go to state 19
+    inCase                         shift and go to state 28
+
+state 148
+
+    (31) decrease -> DECREASE LPAREN ID COMMA sentence RPAREN . SEMICOLON
+
+    SEMICOLON       shift and go to state 156
+
+
+state 149
+
+    (29) dot -> DOT LPAREN sentence COMMA sentence COMMA COLOR . RPAREN SEMICOLON
+
+    RPAREN          shift and go to state 157
+
+
+state 150
+
+    (21) when2 -> WHEN CONDITION sentence THEN LBRACKET . expression RBRACKET when2
+    (1) expression -> . declare expression
+    (2) expression -> . inCase expression
+    (3) expression -> . repeat expression
+    (4) expression -> . since expression
+    (5) expression -> . dot expression
+    (6) expression -> . initialize expression
+    (7) expression -> . fill expression
+    (8) expression -> . increase expression
+    (9) expression -> . decrease expression
+    (10) expression -> . diagonal_right expression
+    (11) expression -> . diagonal_left expression
+    (12) expression -> . procedure expression
+    (13) expression -> . call expression
+    (14) expression -> . empty
+    (15) declare -> . DECLARE ID SEMICOLON
+    (16) declare -> . DECLARE ID DEFAULT NUMBER SEMICOLON
+    (17) inCase -> . INCASE when1 ifnot ENDINCASE SEMICOLON
+    (18) inCase -> . INCASE ID when2 ifnot ENDINCASE SEMICOLON
+    (26) repeat -> . REPEAT expression until_find SEMICOLON
+    (28) since -> . FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON
+    (29) dot -> . DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON
+    (32) initialize -> . INITIALIZE LPAREN ID RPAREN SEMICOLON
+    (33) fill -> . FILL LPAREN fillSentence RPAREN SEMICOLON
+    (30) increase -> . INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (31) decrease -> . DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (37) diagonal_right -> . DIAGR LPAREN sentence RPAREN SEMICOLON
+    (36) diagonal_left -> . DIAGL LPAREN sentence RPAREN SEMICOLON
+    (58) procedure -> . PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON
+    (66) call -> . CALL ID LPAREN params_call RPAREN SEMICOLON
+    (38) empty -> .
+
+    DECLARE         shift and go to state 25
+    INCASE          shift and go to state 14
+    REPEAT          shift and go to state 18
+    FROM            shift and go to state 26
+    DOT             shift and go to state 8
+    INITIALIZE      shift and go to state 10
+    FILL            shift and go to state 2
+    INCREASE        shift and go to state 21
+    DECREASE        shift and go to state 27
+    DIAGR           shift and go to state 7
+    DIAGL           shift and go to state 5
+    PROCEDURE       shift and go to state 22
+    CALL            shift and go to state 16
+    RBRACKET        reduce using rule 38 (empty -> .)
+
+    repeat                         shift and go to state 13
+    decrease                       shift and go to state 15
+    procedure                      shift and go to state 1
+    since                          shift and go to state 17
+    declare                        shift and go to state 4
+    diagonal_right                 shift and go to state 12
+    fill                           shift and go to state 20
+    initialize                     shift and go to state 11
+    diagonal_left                  shift and go to state 23
+    dot                            shift and go to state 24
+    empty                          shift and go to state 6
+    call                           shift and go to state 3
+    expression                     shift and go to state 158
+    increase                       shift and go to state 19
+    inCase                         shift and go to state 28
+
+state 151
+
+    (19) when1 -> WHEN ID CONDITION sentence THEN LBRACKET . expression RBRACKET when1
+    (1) expression -> . declare expression
+    (2) expression -> . inCase expression
+    (3) expression -> . repeat expression
+    (4) expression -> . since expression
+    (5) expression -> . dot expression
+    (6) expression -> . initialize expression
+    (7) expression -> . fill expression
+    (8) expression -> . increase expression
+    (9) expression -> . decrease expression
+    (10) expression -> . diagonal_right expression
+    (11) expression -> . diagonal_left expression
+    (12) expression -> . procedure expression
+    (13) expression -> . call expression
+    (14) expression -> . empty
+    (15) declare -> . DECLARE ID SEMICOLON
+    (16) declare -> . DECLARE ID DEFAULT NUMBER SEMICOLON
+    (17) inCase -> . INCASE when1 ifnot ENDINCASE SEMICOLON
+    (18) inCase -> . INCASE ID when2 ifnot ENDINCASE SEMICOLON
+    (26) repeat -> . REPEAT expression until_find SEMICOLON
+    (28) since -> . FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON
+    (29) dot -> . DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON
+    (32) initialize -> . INITIALIZE LPAREN ID RPAREN SEMICOLON
+    (33) fill -> . FILL LPAREN fillSentence RPAREN SEMICOLON
+    (30) increase -> . INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (31) decrease -> . DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (37) diagonal_right -> . DIAGR LPAREN sentence RPAREN SEMICOLON
+    (36) diagonal_left -> . DIAGL LPAREN sentence RPAREN SEMICOLON
+    (58) procedure -> . PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON
+    (66) call -> . CALL ID LPAREN params_call RPAREN SEMICOLON
+    (38) empty -> .
+
+    DECLARE         shift and go to state 25
+    INCASE          shift and go to state 14
+    REPEAT          shift and go to state 18
+    FROM            shift and go to state 26
+    DOT             shift and go to state 8
+    INITIALIZE      shift and go to state 10
+    FILL            shift and go to state 2
+    INCREASE        shift and go to state 21
+    DECREASE        shift and go to state 27
+    DIAGR           shift and go to state 7
+    DIAGL           shift and go to state 5
+    PROCEDURE       shift and go to state 22
+    CALL            shift and go to state 16
+    RBRACKET        reduce using rule 38 (empty -> .)
+
+    repeat                         shift and go to state 13
+    decrease                       shift and go to state 15
+    procedure                      shift and go to state 1
+    since                          shift and go to state 17
+    declare                        shift and go to state 4
+    diagonal_right                 shift and go to state 12
+    fill                           shift and go to state 20
+    initialize                     shift and go to state 11
+    diagonal_left                  shift and go to state 23
+    dot                            shift and go to state 24
+    empty                          shift and go to state 6
+    call                           shift and go to state 3
+    expression                     shift and go to state 159
+    increase                       shift and go to state 19
+    inCase                         shift and go to state 28
+
+state 152
+
+    (30) increase -> INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON .
+
+    DECLARE         reduce using rule 30 (increase -> INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON .)
+    INCASE          reduce using rule 30 (increase -> INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON .)
+    REPEAT          reduce using rule 30 (increase -> INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON .)
+    FROM            reduce using rule 30 (increase -> INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON .)
+    DOT             reduce using rule 30 (increase -> INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON .)
+    INITIALIZE      reduce using rule 30 (increase -> INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON .)
+    FILL            reduce using rule 30 (increase -> INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON .)
+    INCREASE        reduce using rule 30 (increase -> INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON .)
+    DECREASE        reduce using rule 30 (increase -> INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON .)
+    DIAGR           reduce using rule 30 (increase -> INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON .)
+    DIAGL           reduce using rule 30 (increase -> INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON .)
+    PROCEDURE       reduce using rule 30 (increase -> INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON .)
+    CALL            reduce using rule 30 (increase -> INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON .)
+    ENDFROM         reduce using rule 30 (increase -> INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON .)
+    $end            reduce using rule 30 (increase -> INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON .)
+    TOFIND          reduce using rule 30 (increase -> INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON .)
+    RBRACKET        reduce using rule 30 (increase -> INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON .)
+    END             reduce using rule 30 (increase -> INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON .)
+
+
+state 153
+
+    (39) localDeclare -> DECLARE ID . SEMICOLON
+    (40) localDeclare -> DECLARE ID . DEFAULT NUMBER SEMICOLON
+
+    SEMICOLON       shift and go to state 161
+    DEFAULT         shift and go to state 160
+
+
+state 154
+
+    (58) procedure -> PROCEDURE ID LPAREN params RPAREN localDeclare START . COLON localExpression END SEMICOLON
+
+    COLON           shift and go to state 162
+
+
+state 155
+
+    (28) since -> FROM declare UNTIL CONDITION sentence DO expression . ENDFROM SEMICOLON
+
+    ENDFROM         shift and go to state 163
+
+
+state 156
+
+    (31) decrease -> DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON .
+
+    DECLARE         reduce using rule 31 (decrease -> DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON .)
+    INCASE          reduce using rule 31 (decrease -> DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON .)
+    REPEAT          reduce using rule 31 (decrease -> DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON .)
+    FROM            reduce using rule 31 (decrease -> DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON .)
+    DOT             reduce using rule 31 (decrease -> DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON .)
+    INITIALIZE      reduce using rule 31 (decrease -> DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON .)
+    FILL            reduce using rule 31 (decrease -> DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON .)
+    INCREASE        reduce using rule 31 (decrease -> DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON .)
+    DECREASE        reduce using rule 31 (decrease -> DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON .)
+    DIAGR           reduce using rule 31 (decrease -> DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON .)
+    DIAGL           reduce using rule 31 (decrease -> DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON .)
+    PROCEDURE       reduce using rule 31 (decrease -> DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON .)
+    CALL            reduce using rule 31 (decrease -> DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON .)
+    ENDFROM         reduce using rule 31 (decrease -> DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON .)
+    END             reduce using rule 31 (decrease -> DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON .)
+    $end            reduce using rule 31 (decrease -> DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON .)
+    TOFIND          reduce using rule 31 (decrease -> DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON .)
+    RBRACKET        reduce using rule 31 (decrease -> DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON .)
+
+
+state 157
+
+    (29) dot -> DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN . SEMICOLON
+
+    SEMICOLON       shift and go to state 164
+
+
+state 158
+
+    (21) when2 -> WHEN CONDITION sentence THEN LBRACKET expression . RBRACKET when2
+
+    RBRACKET        shift and go to state 165
+
+
+state 159
+
+    (19) when1 -> WHEN ID CONDITION sentence THEN LBRACKET expression . RBRACKET when1
+
+    RBRACKET        shift and go to state 166
+
+
+state 160
+
+    (40) localDeclare -> DECLARE ID DEFAULT . NUMBER SEMICOLON
+
+    NUMBER          shift and go to state 167
+
+
+state 161
+
+    (39) localDeclare -> DECLARE ID SEMICOLON .
+
+    START           reduce using rule 39 (localDeclare -> DECLARE ID SEMICOLON .)
+
+
+state 162
+
+    (58) procedure -> PROCEDURE ID LPAREN params RPAREN localDeclare START COLON . localExpression END SEMICOLON
+    (41) localExpression -> . inCase localExpression
+    (42) localExpression -> . repeat localExpression
+    (43) localExpression -> . since localExpression
+    (44) localExpression -> . dot localExpression
+    (45) localExpression -> . initialize localExpression
+    (46) localExpression -> . fill localExpression
+    (47) localExpression -> . increase localExpression
+    (48) localExpression -> . decrease localExpression
+    (49) localExpression -> . diagonal_right localExpression
+    (50) localExpression -> . diagonal_left localExpression
+    (51) localExpression -> . procedure localExpression
+    (52) localExpression -> . empty
+    (17) inCase -> . INCASE when1 ifnot ENDINCASE SEMICOLON
+    (18) inCase -> . INCASE ID when2 ifnot ENDINCASE SEMICOLON
+    (26) repeat -> . REPEAT expression until_find SEMICOLON
+    (28) since -> . FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON
+    (29) dot -> . DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON
+    (32) initialize -> . INITIALIZE LPAREN ID RPAREN SEMICOLON
+    (33) fill -> . FILL LPAREN fillSentence RPAREN SEMICOLON
+    (30) increase -> . INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (31) decrease -> . DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (37) diagonal_right -> . DIAGR LPAREN sentence RPAREN SEMICOLON
+    (36) diagonal_left -> . DIAGL LPAREN sentence RPAREN SEMICOLON
+    (58) procedure -> . PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON
+    (38) empty -> .
+
+    INCASE          shift and go to state 14
+    REPEAT          shift and go to state 18
+    FROM            shift and go to state 26
+    DOT             shift and go to state 8
+    INITIALIZE      shift and go to state 10
+    FILL            shift and go to state 2
+    INCREASE        shift and go to state 21
+    DECREASE        shift and go to state 27
+    DIAGR           shift and go to state 7
+    DIAGL           shift and go to state 5
+    PROCEDURE       shift and go to state 22
+    END             reduce using rule 38 (empty -> .)
+
+    repeat                         shift and go to state 173
+    localExpression                shift and go to state 169
+    decrease                       shift and go to state 174
+    procedure                      shift and go to state 168
+    since                          shift and go to state 175
+    diagonal_right                 shift and go to state 170
+    fill                           shift and go to state 176
+    initialize                     shift and go to state 172
+    diagonal_left                  shift and go to state 177
+    dot                            shift and go to state 178
+    empty                          shift and go to state 171
+    increase                       shift and go to state 179
+    inCase                         shift and go to state 180
+
+state 163
+
+    (28) since -> FROM declare UNTIL CONDITION sentence DO expression ENDFROM . SEMICOLON
+
+    SEMICOLON       shift and go to state 181
+
+
+state 164
+
+    (29) dot -> DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON .
+
+    INCASE          reduce using rule 29 (dot -> DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON .)
+    REPEAT          reduce using rule 29 (dot -> DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON .)
+    FROM            reduce using rule 29 (dot -> DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON .)
+    DOT             reduce using rule 29 (dot -> DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON .)
+    INITIALIZE      reduce using rule 29 (dot -> DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON .)
+    FILL            reduce using rule 29 (dot -> DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON .)
+    INCREASE        reduce using rule 29 (dot -> DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON .)
+    DECREASE        reduce using rule 29 (dot -> DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON .)
+    DIAGR           reduce using rule 29 (dot -> DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON .)
+    DIAGL           reduce using rule 29 (dot -> DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON .)
+    PROCEDURE       reduce using rule 29 (dot -> DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON .)
+    END             reduce using rule 29 (dot -> DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON .)
+    DECLARE         reduce using rule 29 (dot -> DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON .)
+    CALL            reduce using rule 29 (dot -> DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON .)
+    $end            reduce using rule 29 (dot -> DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON .)
+    TOFIND          reduce using rule 29 (dot -> DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON .)
+    RBRACKET        reduce using rule 29 (dot -> DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON .)
+    ENDFROM         reduce using rule 29 (dot -> DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON .)
+
+
+state 165
+
+    (21) when2 -> WHEN CONDITION sentence THEN LBRACKET expression RBRACKET . when2
+    (21) when2 -> . WHEN CONDITION sentence THEN LBRACKET expression RBRACKET when2
+    (22) when2 -> . empty
+    (38) empty -> .
+
+    WHEN            shift and go to state 68
+    IFNOT           reduce using rule 38 (empty -> .)
+
+    empty                          shift and go to state 69
+    when2                          shift and go to state 182
+
+state 166
+
+    (19) when1 -> WHEN ID CONDITION sentence THEN LBRACKET expression RBRACKET . when1
+    (19) when1 -> . WHEN ID CONDITION sentence THEN LBRACKET expression RBRACKET when1
+    (20) when1 -> . empty
+    (38) empty -> .
+
+    WHEN            shift and go to state 41
+    IFNOT           reduce using rule 38 (empty -> .)
+
+    empty                          shift and go to state 42
+    when1                          shift and go to state 183
+
+state 167
+
+    (40) localDeclare -> DECLARE ID DEFAULT NUMBER . SEMICOLON
+
+    SEMICOLON       shift and go to state 184
+
+
+state 168
+
+    (51) localExpression -> procedure . localExpression
+    (41) localExpression -> . inCase localExpression
+    (42) localExpression -> . repeat localExpression
+    (43) localExpression -> . since localExpression
+    (44) localExpression -> . dot localExpression
+    (45) localExpression -> . initialize localExpression
+    (46) localExpression -> . fill localExpression
+    (47) localExpression -> . increase localExpression
+    (48) localExpression -> . decrease localExpression
+    (49) localExpression -> . diagonal_right localExpression
+    (50) localExpression -> . diagonal_left localExpression
+    (51) localExpression -> . procedure localExpression
+    (52) localExpression -> . empty
+    (17) inCase -> . INCASE when1 ifnot ENDINCASE SEMICOLON
+    (18) inCase -> . INCASE ID when2 ifnot ENDINCASE SEMICOLON
+    (26) repeat -> . REPEAT expression until_find SEMICOLON
+    (28) since -> . FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON
+    (29) dot -> . DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON
+    (32) initialize -> . INITIALIZE LPAREN ID RPAREN SEMICOLON
+    (33) fill -> . FILL LPAREN fillSentence RPAREN SEMICOLON
+    (30) increase -> . INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (31) decrease -> . DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (37) diagonal_right -> . DIAGR LPAREN sentence RPAREN SEMICOLON
+    (36) diagonal_left -> . DIAGL LPAREN sentence RPAREN SEMICOLON
+    (58) procedure -> . PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON
+    (38) empty -> .
+
+    INCASE          shift and go to state 14
+    REPEAT          shift and go to state 18
+    FROM            shift and go to state 26
+    DOT             shift and go to state 8
+    INITIALIZE      shift and go to state 10
+    FILL            shift and go to state 2
+    INCREASE        shift and go to state 21
+    DECREASE        shift and go to state 27
+    DIAGR           shift and go to state 7
+    DIAGL           shift and go to state 5
+    PROCEDURE       shift and go to state 22
+    END             reduce using rule 38 (empty -> .)
+
+    repeat                         shift and go to state 173
+    localExpression                shift and go to state 185
+    decrease                       shift and go to state 174
+    procedure                      shift and go to state 168
+    since                          shift and go to state 175
+    diagonal_right                 shift and go to state 170
+    fill                           shift and go to state 176
+    initialize                     shift and go to state 172
+    diagonal_left                  shift and go to state 177
+    dot                            shift and go to state 178
+    empty                          shift and go to state 171
+    increase                       shift and go to state 179
+    inCase                         shift and go to state 180
+
+state 169
+
+    (58) procedure -> PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression . END SEMICOLON
+
+    END             shift and go to state 186
+
+
+state 170
+
+    (49) localExpression -> diagonal_right . localExpression
+    (41) localExpression -> . inCase localExpression
+    (42) localExpression -> . repeat localExpression
+    (43) localExpression -> . since localExpression
+    (44) localExpression -> . dot localExpression
+    (45) localExpression -> . initialize localExpression
+    (46) localExpression -> . fill localExpression
+    (47) localExpression -> . increase localExpression
+    (48) localExpression -> . decrease localExpression
+    (49) localExpression -> . diagonal_right localExpression
+    (50) localExpression -> . diagonal_left localExpression
+    (51) localExpression -> . procedure localExpression
+    (52) localExpression -> . empty
+    (17) inCase -> . INCASE when1 ifnot ENDINCASE SEMICOLON
+    (18) inCase -> . INCASE ID when2 ifnot ENDINCASE SEMICOLON
+    (26) repeat -> . REPEAT expression until_find SEMICOLON
+    (28) since -> . FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON
+    (29) dot -> . DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON
+    (32) initialize -> . INITIALIZE LPAREN ID RPAREN SEMICOLON
+    (33) fill -> . FILL LPAREN fillSentence RPAREN SEMICOLON
+    (30) increase -> . INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (31) decrease -> . DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (37) diagonal_right -> . DIAGR LPAREN sentence RPAREN SEMICOLON
+    (36) diagonal_left -> . DIAGL LPAREN sentence RPAREN SEMICOLON
+    (58) procedure -> . PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON
+    (38) empty -> .
+
+    INCASE          shift and go to state 14
+    REPEAT          shift and go to state 18
+    FROM            shift and go to state 26
+    DOT             shift and go to state 8
+    INITIALIZE      shift and go to state 10
+    FILL            shift and go to state 2
+    INCREASE        shift and go to state 21
+    DECREASE        shift and go to state 27
+    DIAGR           shift and go to state 7
+    DIAGL           shift and go to state 5
+    PROCEDURE       shift and go to state 22
+    END             reduce using rule 38 (empty -> .)
+
+    repeat                         shift and go to state 173
+    localExpression                shift and go to state 187
+    decrease                       shift and go to state 174
+    procedure                      shift and go to state 168
+    since                          shift and go to state 175
+    diagonal_right                 shift and go to state 170
+    fill                           shift and go to state 176
+    initialize                     shift and go to state 172
+    diagonal_left                  shift and go to state 177
+    dot                            shift and go to state 178
+    empty                          shift and go to state 171
+    increase                       shift and go to state 179
+    inCase                         shift and go to state 180
+
+state 171
+
+    (52) localExpression -> empty .
+
+    END             reduce using rule 52 (localExpression -> empty .)
+
+
+state 172
+
+    (45) localExpression -> initialize . localExpression
+    (41) localExpression -> . inCase localExpression
+    (42) localExpression -> . repeat localExpression
+    (43) localExpression -> . since localExpression
+    (44) localExpression -> . dot localExpression
+    (45) localExpression -> . initialize localExpression
+    (46) localExpression -> . fill localExpression
+    (47) localExpression -> . increase localExpression
+    (48) localExpression -> . decrease localExpression
+    (49) localExpression -> . diagonal_right localExpression
+    (50) localExpression -> . diagonal_left localExpression
+    (51) localExpression -> . procedure localExpression
+    (52) localExpression -> . empty
+    (17) inCase -> . INCASE when1 ifnot ENDINCASE SEMICOLON
+    (18) inCase -> . INCASE ID when2 ifnot ENDINCASE SEMICOLON
+    (26) repeat -> . REPEAT expression until_find SEMICOLON
+    (28) since -> . FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON
+    (29) dot -> . DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON
+    (32) initialize -> . INITIALIZE LPAREN ID RPAREN SEMICOLON
+    (33) fill -> . FILL LPAREN fillSentence RPAREN SEMICOLON
+    (30) increase -> . INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (31) decrease -> . DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (37) diagonal_right -> . DIAGR LPAREN sentence RPAREN SEMICOLON
+    (36) diagonal_left -> . DIAGL LPAREN sentence RPAREN SEMICOLON
+    (58) procedure -> . PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON
+    (38) empty -> .
+
+    INCASE          shift and go to state 14
+    REPEAT          shift and go to state 18
+    FROM            shift and go to state 26
+    DOT             shift and go to state 8
+    INITIALIZE      shift and go to state 10
+    FILL            shift and go to state 2
+    INCREASE        shift and go to state 21
+    DECREASE        shift and go to state 27
+    DIAGR           shift and go to state 7
+    DIAGL           shift and go to state 5
+    PROCEDURE       shift and go to state 22
+    END             reduce using rule 38 (empty -> .)
+
+    repeat                         shift and go to state 173
+    localExpression                shift and go to state 188
+    decrease                       shift and go to state 174
+    procedure                      shift and go to state 168
+    since                          shift and go to state 175
+    diagonal_right                 shift and go to state 170
+    fill                           shift and go to state 176
+    initialize                     shift and go to state 172
+    diagonal_left                  shift and go to state 177
+    dot                            shift and go to state 178
+    empty                          shift and go to state 171
+    increase                       shift and go to state 179
+    inCase                         shift and go to state 180
+
+state 173
+
+    (42) localExpression -> repeat . localExpression
+    (41) localExpression -> . inCase localExpression
+    (42) localExpression -> . repeat localExpression
+    (43) localExpression -> . since localExpression
+    (44) localExpression -> . dot localExpression
+    (45) localExpression -> . initialize localExpression
+    (46) localExpression -> . fill localExpression
+    (47) localExpression -> . increase localExpression
+    (48) localExpression -> . decrease localExpression
+    (49) localExpression -> . diagonal_right localExpression
+    (50) localExpression -> . diagonal_left localExpression
+    (51) localExpression -> . procedure localExpression
+    (52) localExpression -> . empty
+    (17) inCase -> . INCASE when1 ifnot ENDINCASE SEMICOLON
+    (18) inCase -> . INCASE ID when2 ifnot ENDINCASE SEMICOLON
+    (26) repeat -> . REPEAT expression until_find SEMICOLON
+    (28) since -> . FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON
+    (29) dot -> . DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON
+    (32) initialize -> . INITIALIZE LPAREN ID RPAREN SEMICOLON
+    (33) fill -> . FILL LPAREN fillSentence RPAREN SEMICOLON
+    (30) increase -> . INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (31) decrease -> . DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (37) diagonal_right -> . DIAGR LPAREN sentence RPAREN SEMICOLON
+    (36) diagonal_left -> . DIAGL LPAREN sentence RPAREN SEMICOLON
+    (58) procedure -> . PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON
+    (38) empty -> .
+
+    INCASE          shift and go to state 14
+    REPEAT          shift and go to state 18
+    FROM            shift and go to state 26
+    DOT             shift and go to state 8
+    INITIALIZE      shift and go to state 10
+    FILL            shift and go to state 2
+    INCREASE        shift and go to state 21
+    DECREASE        shift and go to state 27
+    DIAGR           shift and go to state 7
+    DIAGL           shift and go to state 5
+    PROCEDURE       shift and go to state 22
+    END             reduce using rule 38 (empty -> .)
+
+    repeat                         shift and go to state 173
+    localExpression                shift and go to state 189
+    decrease                       shift and go to state 174
+    procedure                      shift and go to state 168
+    since                          shift and go to state 175
+    diagonal_right                 shift and go to state 170
+    fill                           shift and go to state 176
+    initialize                     shift and go to state 172
+    diagonal_left                  shift and go to state 177
+    dot                            shift and go to state 178
+    empty                          shift and go to state 171
+    increase                       shift and go to state 179
+    inCase                         shift and go to state 180
+
+state 174
+
+    (48) localExpression -> decrease . localExpression
+    (41) localExpression -> . inCase localExpression
+    (42) localExpression -> . repeat localExpression
+    (43) localExpression -> . since localExpression
+    (44) localExpression -> . dot localExpression
+    (45) localExpression -> . initialize localExpression
+    (46) localExpression -> . fill localExpression
+    (47) localExpression -> . increase localExpression
+    (48) localExpression -> . decrease localExpression
+    (49) localExpression -> . diagonal_right localExpression
+    (50) localExpression -> . diagonal_left localExpression
+    (51) localExpression -> . procedure localExpression
+    (52) localExpression -> . empty
+    (17) inCase -> . INCASE when1 ifnot ENDINCASE SEMICOLON
+    (18) inCase -> . INCASE ID when2 ifnot ENDINCASE SEMICOLON
+    (26) repeat -> . REPEAT expression until_find SEMICOLON
+    (28) since -> . FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON
+    (29) dot -> . DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON
+    (32) initialize -> . INITIALIZE LPAREN ID RPAREN SEMICOLON
+    (33) fill -> . FILL LPAREN fillSentence RPAREN SEMICOLON
+    (30) increase -> . INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (31) decrease -> . DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (37) diagonal_right -> . DIAGR LPAREN sentence RPAREN SEMICOLON
+    (36) diagonal_left -> . DIAGL LPAREN sentence RPAREN SEMICOLON
+    (58) procedure -> . PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON
+    (38) empty -> .
+
+    INCASE          shift and go to state 14
+    REPEAT          shift and go to state 18
+    FROM            shift and go to state 26
+    DOT             shift and go to state 8
+    INITIALIZE      shift and go to state 10
+    FILL            shift and go to state 2
+    INCREASE        shift and go to state 21
+    DECREASE        shift and go to state 27
+    DIAGR           shift and go to state 7
+    DIAGL           shift and go to state 5
+    PROCEDURE       shift and go to state 22
+    END             reduce using rule 38 (empty -> .)
+
+    repeat                         shift and go to state 173
+    localExpression                shift and go to state 190
+    decrease                       shift and go to state 174
+    procedure                      shift and go to state 168
+    since                          shift and go to state 175
+    diagonal_right                 shift and go to state 170
+    fill                           shift and go to state 176
+    initialize                     shift and go to state 172
+    diagonal_left                  shift and go to state 177
+    dot                            shift and go to state 178
+    empty                          shift and go to state 171
+    increase                       shift and go to state 179
+    inCase                         shift and go to state 180
+
+state 175
+
+    (43) localExpression -> since . localExpression
+    (41) localExpression -> . inCase localExpression
+    (42) localExpression -> . repeat localExpression
+    (43) localExpression -> . since localExpression
+    (44) localExpression -> . dot localExpression
+    (45) localExpression -> . initialize localExpression
+    (46) localExpression -> . fill localExpression
+    (47) localExpression -> . increase localExpression
+    (48) localExpression -> . decrease localExpression
+    (49) localExpression -> . diagonal_right localExpression
+    (50) localExpression -> . diagonal_left localExpression
+    (51) localExpression -> . procedure localExpression
+    (52) localExpression -> . empty
+    (17) inCase -> . INCASE when1 ifnot ENDINCASE SEMICOLON
+    (18) inCase -> . INCASE ID when2 ifnot ENDINCASE SEMICOLON
+    (26) repeat -> . REPEAT expression until_find SEMICOLON
+    (28) since -> . FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON
+    (29) dot -> . DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON
+    (32) initialize -> . INITIALIZE LPAREN ID RPAREN SEMICOLON
+    (33) fill -> . FILL LPAREN fillSentence RPAREN SEMICOLON
+    (30) increase -> . INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (31) decrease -> . DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (37) diagonal_right -> . DIAGR LPAREN sentence RPAREN SEMICOLON
+    (36) diagonal_left -> . DIAGL LPAREN sentence RPAREN SEMICOLON
+    (58) procedure -> . PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON
+    (38) empty -> .
+
+    INCASE          shift and go to state 14
+    REPEAT          shift and go to state 18
+    FROM            shift and go to state 26
+    DOT             shift and go to state 8
+    INITIALIZE      shift and go to state 10
+    FILL            shift and go to state 2
+    INCREASE        shift and go to state 21
+    DECREASE        shift and go to state 27
+    DIAGR           shift and go to state 7
+    DIAGL           shift and go to state 5
+    PROCEDURE       shift and go to state 22
+    END             reduce using rule 38 (empty -> .)
+
+    repeat                         shift and go to state 173
+    localExpression                shift and go to state 191
+    decrease                       shift and go to state 174
+    procedure                      shift and go to state 168
+    since                          shift and go to state 175
+    diagonal_right                 shift and go to state 170
+    fill                           shift and go to state 176
+    initialize                     shift and go to state 172
+    diagonal_left                  shift and go to state 177
+    dot                            shift and go to state 178
+    empty                          shift and go to state 171
+    increase                       shift and go to state 179
+    inCase                         shift and go to state 180
+
+state 176
+
+    (46) localExpression -> fill . localExpression
+    (41) localExpression -> . inCase localExpression
+    (42) localExpression -> . repeat localExpression
+    (43) localExpression -> . since localExpression
+    (44) localExpression -> . dot localExpression
+    (45) localExpression -> . initialize localExpression
+    (46) localExpression -> . fill localExpression
+    (47) localExpression -> . increase localExpression
+    (48) localExpression -> . decrease localExpression
+    (49) localExpression -> . diagonal_right localExpression
+    (50) localExpression -> . diagonal_left localExpression
+    (51) localExpression -> . procedure localExpression
+    (52) localExpression -> . empty
+    (17) inCase -> . INCASE when1 ifnot ENDINCASE SEMICOLON
+    (18) inCase -> . INCASE ID when2 ifnot ENDINCASE SEMICOLON
+    (26) repeat -> . REPEAT expression until_find SEMICOLON
+    (28) since -> . FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON
+    (29) dot -> . DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON
+    (32) initialize -> . INITIALIZE LPAREN ID RPAREN SEMICOLON
+    (33) fill -> . FILL LPAREN fillSentence RPAREN SEMICOLON
+    (30) increase -> . INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (31) decrease -> . DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (37) diagonal_right -> . DIAGR LPAREN sentence RPAREN SEMICOLON
+    (36) diagonal_left -> . DIAGL LPAREN sentence RPAREN SEMICOLON
+    (58) procedure -> . PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON
+    (38) empty -> .
+
+    INCASE          shift and go to state 14
+    REPEAT          shift and go to state 18
+    FROM            shift and go to state 26
+    DOT             shift and go to state 8
+    INITIALIZE      shift and go to state 10
+    FILL            shift and go to state 2
+    INCREASE        shift and go to state 21
+    DECREASE        shift and go to state 27
+    DIAGR           shift and go to state 7
+    DIAGL           shift and go to state 5
+    PROCEDURE       shift and go to state 22
+    END             reduce using rule 38 (empty -> .)
+
+    repeat                         shift and go to state 173
+    localExpression                shift and go to state 192
+    decrease                       shift and go to state 174
+    procedure                      shift and go to state 168
+    since                          shift and go to state 175
+    diagonal_right                 shift and go to state 170
+    fill                           shift and go to state 176
+    initialize                     shift and go to state 172
+    diagonal_left                  shift and go to state 177
+    dot                            shift and go to state 178
+    empty                          shift and go to state 171
+    increase                       shift and go to state 179
+    inCase                         shift and go to state 180
+
+state 177
+
+    (50) localExpression -> diagonal_left . localExpression
+    (41) localExpression -> . inCase localExpression
+    (42) localExpression -> . repeat localExpression
+    (43) localExpression -> . since localExpression
+    (44) localExpression -> . dot localExpression
+    (45) localExpression -> . initialize localExpression
+    (46) localExpression -> . fill localExpression
+    (47) localExpression -> . increase localExpression
+    (48) localExpression -> . decrease localExpression
+    (49) localExpression -> . diagonal_right localExpression
+    (50) localExpression -> . diagonal_left localExpression
+    (51) localExpression -> . procedure localExpression
+    (52) localExpression -> . empty
+    (17) inCase -> . INCASE when1 ifnot ENDINCASE SEMICOLON
+    (18) inCase -> . INCASE ID when2 ifnot ENDINCASE SEMICOLON
+    (26) repeat -> . REPEAT expression until_find SEMICOLON
+    (28) since -> . FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON
+    (29) dot -> . DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON
+    (32) initialize -> . INITIALIZE LPAREN ID RPAREN SEMICOLON
+    (33) fill -> . FILL LPAREN fillSentence RPAREN SEMICOLON
+    (30) increase -> . INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (31) decrease -> . DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (37) diagonal_right -> . DIAGR LPAREN sentence RPAREN SEMICOLON
+    (36) diagonal_left -> . DIAGL LPAREN sentence RPAREN SEMICOLON
+    (58) procedure -> . PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON
+    (38) empty -> .
+
+    INCASE          shift and go to state 14
+    REPEAT          shift and go to state 18
+    FROM            shift and go to state 26
+    DOT             shift and go to state 8
+    INITIALIZE      shift and go to state 10
+    FILL            shift and go to state 2
+    INCREASE        shift and go to state 21
+    DECREASE        shift and go to state 27
+    DIAGR           shift and go to state 7
+    DIAGL           shift and go to state 5
+    PROCEDURE       shift and go to state 22
+    END             reduce using rule 38 (empty -> .)
+
+    repeat                         shift and go to state 173
+    localExpression                shift and go to state 193
+    decrease                       shift and go to state 174
+    procedure                      shift and go to state 168
+    since                          shift and go to state 175
+    diagonal_right                 shift and go to state 170
+    fill                           shift and go to state 176
+    initialize                     shift and go to state 172
+    diagonal_left                  shift and go to state 177
+    dot                            shift and go to state 178
+    empty                          shift and go to state 171
+    increase                       shift and go to state 179
+    inCase                         shift and go to state 180
+
+state 178
+
+    (44) localExpression -> dot . localExpression
+    (41) localExpression -> . inCase localExpression
+    (42) localExpression -> . repeat localExpression
+    (43) localExpression -> . since localExpression
+    (44) localExpression -> . dot localExpression
+    (45) localExpression -> . initialize localExpression
+    (46) localExpression -> . fill localExpression
+    (47) localExpression -> . increase localExpression
+    (48) localExpression -> . decrease localExpression
+    (49) localExpression -> . diagonal_right localExpression
+    (50) localExpression -> . diagonal_left localExpression
+    (51) localExpression -> . procedure localExpression
+    (52) localExpression -> . empty
+    (17) inCase -> . INCASE when1 ifnot ENDINCASE SEMICOLON
+    (18) inCase -> . INCASE ID when2 ifnot ENDINCASE SEMICOLON
+    (26) repeat -> . REPEAT expression until_find SEMICOLON
+    (28) since -> . FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON
+    (29) dot -> . DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON
+    (32) initialize -> . INITIALIZE LPAREN ID RPAREN SEMICOLON
+    (33) fill -> . FILL LPAREN fillSentence RPAREN SEMICOLON
+    (30) increase -> . INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (31) decrease -> . DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (37) diagonal_right -> . DIAGR LPAREN sentence RPAREN SEMICOLON
+    (36) diagonal_left -> . DIAGL LPAREN sentence RPAREN SEMICOLON
+    (58) procedure -> . PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON
+    (38) empty -> .
+
+    INCASE          shift and go to state 14
+    REPEAT          shift and go to state 18
+    FROM            shift and go to state 26
+    DOT             shift and go to state 8
+    INITIALIZE      shift and go to state 10
+    FILL            shift and go to state 2
+    INCREASE        shift and go to state 21
+    DECREASE        shift and go to state 27
+    DIAGR           shift and go to state 7
+    DIAGL           shift and go to state 5
+    PROCEDURE       shift and go to state 22
+    END             reduce using rule 38 (empty -> .)
+
+    repeat                         shift and go to state 173
+    localExpression                shift and go to state 194
+    decrease                       shift and go to state 174
+    procedure                      shift and go to state 168
+    since                          shift and go to state 175
+    diagonal_right                 shift and go to state 170
+    fill                           shift and go to state 176
+    initialize                     shift and go to state 172
+    diagonal_left                  shift and go to state 177
+    dot                            shift and go to state 178
+    empty                          shift and go to state 171
+    increase                       shift and go to state 179
+    inCase                         shift and go to state 180
+
+state 179
+
+    (47) localExpression -> increase . localExpression
+    (41) localExpression -> . inCase localExpression
+    (42) localExpression -> . repeat localExpression
+    (43) localExpression -> . since localExpression
+    (44) localExpression -> . dot localExpression
+    (45) localExpression -> . initialize localExpression
+    (46) localExpression -> . fill localExpression
+    (47) localExpression -> . increase localExpression
+    (48) localExpression -> . decrease localExpression
+    (49) localExpression -> . diagonal_right localExpression
+    (50) localExpression -> . diagonal_left localExpression
+    (51) localExpression -> . procedure localExpression
+    (52) localExpression -> . empty
+    (17) inCase -> . INCASE when1 ifnot ENDINCASE SEMICOLON
+    (18) inCase -> . INCASE ID when2 ifnot ENDINCASE SEMICOLON
+    (26) repeat -> . REPEAT expression until_find SEMICOLON
+    (28) since -> . FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON
+    (29) dot -> . DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON
+    (32) initialize -> . INITIALIZE LPAREN ID RPAREN SEMICOLON
+    (33) fill -> . FILL LPAREN fillSentence RPAREN SEMICOLON
+    (30) increase -> . INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (31) decrease -> . DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (37) diagonal_right -> . DIAGR LPAREN sentence RPAREN SEMICOLON
+    (36) diagonal_left -> . DIAGL LPAREN sentence RPAREN SEMICOLON
+    (58) procedure -> . PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON
+    (38) empty -> .
+
+    INCASE          shift and go to state 14
+    REPEAT          shift and go to state 18
+    FROM            shift and go to state 26
+    DOT             shift and go to state 8
+    INITIALIZE      shift and go to state 10
+    FILL            shift and go to state 2
+    INCREASE        shift and go to state 21
+    DECREASE        shift and go to state 27
+    DIAGR           shift and go to state 7
+    DIAGL           shift and go to state 5
+    PROCEDURE       shift and go to state 22
+    END             reduce using rule 38 (empty -> .)
+
+    repeat                         shift and go to state 173
+    localExpression                shift and go to state 195
+    decrease                       shift and go to state 174
+    procedure                      shift and go to state 168
+    since                          shift and go to state 175
+    diagonal_right                 shift and go to state 170
+    fill                           shift and go to state 176
+    initialize                     shift and go to state 172
+    diagonal_left                  shift and go to state 177
+    dot                            shift and go to state 178
+    empty                          shift and go to state 171
+    increase                       shift and go to state 179
+    inCase                         shift and go to state 180
+
+state 180
+
+    (41) localExpression -> inCase . localExpression
+    (41) localExpression -> . inCase localExpression
+    (42) localExpression -> . repeat localExpression
+    (43) localExpression -> . since localExpression
+    (44) localExpression -> . dot localExpression
+    (45) localExpression -> . initialize localExpression
+    (46) localExpression -> . fill localExpression
+    (47) localExpression -> . increase localExpression
+    (48) localExpression -> . decrease localExpression
+    (49) localExpression -> . diagonal_right localExpression
+    (50) localExpression -> . diagonal_left localExpression
+    (51) localExpression -> . procedure localExpression
+    (52) localExpression -> . empty
+    (17) inCase -> . INCASE when1 ifnot ENDINCASE SEMICOLON
+    (18) inCase -> . INCASE ID when2 ifnot ENDINCASE SEMICOLON
+    (26) repeat -> . REPEAT expression until_find SEMICOLON
+    (28) since -> . FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON
+    (29) dot -> . DOT LPAREN sentence COMMA sentence COMMA COLOR RPAREN SEMICOLON
+    (32) initialize -> . INITIALIZE LPAREN ID RPAREN SEMICOLON
+    (33) fill -> . FILL LPAREN fillSentence RPAREN SEMICOLON
+    (30) increase -> . INCREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (31) decrease -> . DECREASE LPAREN ID COMMA sentence RPAREN SEMICOLON
+    (37) diagonal_right -> . DIAGR LPAREN sentence RPAREN SEMICOLON
+    (36) diagonal_left -> . DIAGL LPAREN sentence RPAREN SEMICOLON
+    (58) procedure -> . PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON
+    (38) empty -> .
+
+    INCASE          shift and go to state 14
+    REPEAT          shift and go to state 18
+    FROM            shift and go to state 26
+    DOT             shift and go to state 8
+    INITIALIZE      shift and go to state 10
+    FILL            shift and go to state 2
+    INCREASE        shift and go to state 21
+    DECREASE        shift and go to state 27
+    DIAGR           shift and go to state 7
+    DIAGL           shift and go to state 5
+    PROCEDURE       shift and go to state 22
+    END             reduce using rule 38 (empty -> .)
+
+    repeat                         shift and go to state 173
+    localExpression                shift and go to state 196
+    decrease                       shift and go to state 174
+    procedure                      shift and go to state 168
+    since                          shift and go to state 175
+    diagonal_right                 shift and go to state 170
+    fill                           shift and go to state 176
+    initialize                     shift and go to state 172
+    diagonal_left                  shift and go to state 177
+    dot                            shift and go to state 178
+    empty                          shift and go to state 171
+    increase                       shift and go to state 179
+    inCase                         shift and go to state 180
+
+state 181
+
+    (28) since -> FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON .
+
+    INCASE          reduce using rule 28 (since -> FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON .)
+    REPEAT          reduce using rule 28 (since -> FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON .)
+    FROM            reduce using rule 28 (since -> FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON .)
+    DOT             reduce using rule 28 (since -> FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON .)
+    INITIALIZE      reduce using rule 28 (since -> FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON .)
+    FILL            reduce using rule 28 (since -> FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON .)
+    INCREASE        reduce using rule 28 (since -> FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON .)
+    DECREASE        reduce using rule 28 (since -> FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON .)
+    DIAGR           reduce using rule 28 (since -> FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON .)
+    DIAGL           reduce using rule 28 (since -> FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON .)
+    PROCEDURE       reduce using rule 28 (since -> FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON .)
+    END             reduce using rule 28 (since -> FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON .)
+    DECLARE         reduce using rule 28 (since -> FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON .)
+    CALL            reduce using rule 28 (since -> FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON .)
+    RBRACKET        reduce using rule 28 (since -> FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON .)
+    TOFIND          reduce using rule 28 (since -> FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON .)
+    $end            reduce using rule 28 (since -> FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON .)
+    ENDFROM         reduce using rule 28 (since -> FROM declare UNTIL CONDITION sentence DO expression ENDFROM SEMICOLON .)
+
+
+state 182
+
+    (21) when2 -> WHEN CONDITION sentence THEN LBRACKET expression RBRACKET when2 .
+
+    IFNOT           reduce using rule 21 (when2 -> WHEN CONDITION sentence THEN LBRACKET expression RBRACKET when2 .)
+
+
+state 183
+
+    (19) when1 -> WHEN ID CONDITION sentence THEN LBRACKET expression RBRACKET when1 .
+
+    IFNOT           reduce using rule 19 (when1 -> WHEN ID CONDITION sentence THEN LBRACKET expression RBRACKET when1 .)
+
+
+state 184
+
+    (40) localDeclare -> DECLARE ID DEFAULT NUMBER SEMICOLON .
+
+    START           reduce using rule 40 (localDeclare -> DECLARE ID DEFAULT NUMBER SEMICOLON .)
+
+
+state 185
+
+    (51) localExpression -> procedure localExpression .
+
+    END             reduce using rule 51 (localExpression -> procedure localExpression .)
+
+
+state 186
+
+    (58) procedure -> PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END . SEMICOLON
+
+    SEMICOLON       shift and go to state 197
+
+
+state 187
+
+    (49) localExpression -> diagonal_right localExpression .
+
+    END             reduce using rule 49 (localExpression -> diagonal_right localExpression .)
+
+
+state 188
+
+    (45) localExpression -> initialize localExpression .
+
+    END             reduce using rule 45 (localExpression -> initialize localExpression .)
+
+
+state 189
+
+    (42) localExpression -> repeat localExpression .
+
+    END             reduce using rule 42 (localExpression -> repeat localExpression .)
+
+
+state 190
+
+    (48) localExpression -> decrease localExpression .
+
+    END             reduce using rule 48 (localExpression -> decrease localExpression .)
+
+
+state 191
+
+    (43) localExpression -> since localExpression .
+
+    END             reduce using rule 43 (localExpression -> since localExpression .)
+
+
+state 192
+
+    (46) localExpression -> fill localExpression .
+
+    END             reduce using rule 46 (localExpression -> fill localExpression .)
+
+
+state 193
+
+    (50) localExpression -> diagonal_left localExpression .
+
+    END             reduce using rule 50 (localExpression -> diagonal_left localExpression .)
+
+
+state 194
+
+    (44) localExpression -> dot localExpression .
+
+    END             reduce using rule 44 (localExpression -> dot localExpression .)
+
+
+state 195
+
+    (47) localExpression -> increase localExpression .
+
+    END             reduce using rule 47 (localExpression -> increase localExpression .)
+
+
+state 196
+
+    (41) localExpression -> inCase localExpression .
+
+    END             reduce using rule 41 (localExpression -> inCase localExpression .)
+
+
+state 197
+
+    (58) procedure -> PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON .
+
+    DECLARE         reduce using rule 58 (procedure -> PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON .)
+    INCASE          reduce using rule 58 (procedure -> PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON .)
+    REPEAT          reduce using rule 58 (procedure -> PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON .)
+    FROM            reduce using rule 58 (procedure -> PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON .)
+    DOT             reduce using rule 58 (procedure -> PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON .)
+    INITIALIZE      reduce using rule 58 (procedure -> PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON .)
+    FILL            reduce using rule 58 (procedure -> PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON .)
+    INCREASE        reduce using rule 58 (procedure -> PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON .)
+    DECREASE        reduce using rule 58 (procedure -> PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON .)
+    DIAGR           reduce using rule 58 (procedure -> PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON .)
+    DIAGL           reduce using rule 58 (procedure -> PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON .)
+    PROCEDURE       reduce using rule 58 (procedure -> PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON .)
+    CALL            reduce using rule 58 (procedure -> PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON .)
+    $end            reduce using rule 58 (procedure -> PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON .)
+    END             reduce using rule 58 (procedure -> PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON .)
+    TOFIND          reduce using rule 58 (procedure -> PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON .)
+    RBRACKET        reduce using rule 58 (procedure -> PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON .)
+    ENDFROM         reduce using rule 58 (procedure -> PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON .)
 

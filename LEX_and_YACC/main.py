@@ -20,13 +20,12 @@ try:
     result = yacc_Duino.yacc.parse(data)
 except SyntaxError as Sy:
     print("Error de Syntaxis:",Sy)
-except ValueError:
+except ValueError as Va:
     print("Error valor erroneo:",Va)
 except NameError as Na:
     print("Undifined Name:",Na)
 finally:
-    #print(data)
-    2+1
+    print(data)
 
 #"""
         
