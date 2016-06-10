@@ -1,0 +1,524 @@
+Created by PLY version 3.4 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    DO
+    UNTIL
+    ENDSINCE
+    MINUS
+    DOT
+    FILL
+    RPAREN
+    PLUS
+    REPEAT
+    END
+    DIVIDE
+    DIAGL
+    TIMES
+    DIAGR
+    START
+    TOFIND
+    LPAREN
+    PROCEDURE
+    FROM
+    CALL
+    INI
+    INC
+
+Grammar
+
+Rule 0     S' -> expresion
+Rule 1     expresion -> declare
+Rule 2     expresion -> inCase
+Rule 3     expresion -> repeat
+Rule 4     declare -> DECLARE ID SEMICOLON
+Rule 5     declare -> DECLARE ID DEFAULT NUMBER SEMICOLON
+Rule 6     inCase -> INCASE when1 ifnot ENDINCASE SEMICOLON
+Rule 7     inCase -> INCASE ID when2 ifnot ENDINCASE SEMICOLON
+Rule 8     when1 -> WHEN ID CONDITION sentence THEN LBRACKET expresion RBRACKET when1
+Rule 9     when1 -> empty
+Rule 10    ifnot -> IFNOT LBRACKET expresion RBRACKET
+Rule 11    when2 -> WHEN CONDITION sentence THEN LBRACKET expresion RBRACKET when2
+Rule 12    when2 -> empty
+Rule 13    sentence -> ID
+Rule 14    sentence -> NUMBER
+Rule 15    repeat -> <empty>
+Rule 16    empty -> <empty>
+
+Terminals, with rules where they appear
+
+CALL                 : 
+CONDITION            : 8 11
+DECLARE              : 4 5
+DEFAULT              : 5
+DIAGL                : 
+DIAGR                : 
+DIVIDE               : 
+DO                   : 
+DOT                  : 
+END                  : 
+ENDINCASE            : 6 7
+ENDSINCE             : 
+FILL                 : 
+FROM                 : 
+ID                   : 4 5 7 8 13
+IFNOT                : 10
+INC                  : 
+INCASE               : 6 7
+INI                  : 
+LBRACKET             : 8 10 11
+LPAREN               : 
+MINUS                : 
+NUMBER               : 5 14
+PLUS                 : 
+PROCEDURE            : 
+RBRACKET             : 8 10 11
+REPEAT               : 
+RPAREN               : 
+SEMICOLON            : 4 5 6 7
+START                : 
+THEN                 : 8 11
+TIMES                : 
+TOFIND               : 
+UNTIL                : 
+WHEN                 : 8 11
+error                : 
+
+Nonterminals, with rules where they appear
+
+declare              : 1
+empty                : 9 12
+expresion            : 8 10 11 0
+ifnot                : 6 7
+inCase               : 2
+repeat               : 3
+sentence             : 8 11
+when1                : 6 8
+when2                : 7 11
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . expresion
+    (1) expresion -> . declare
+    (2) expresion -> . inCase
+    (3) expresion -> . repeat
+    (4) declare -> . DECLARE ID SEMICOLON
+    (5) declare -> . DECLARE ID DEFAULT NUMBER SEMICOLON
+    (6) inCase -> . INCASE when1 ifnot ENDINCASE SEMICOLON
+    (7) inCase -> . INCASE ID when2 ifnot ENDINCASE SEMICOLON
+    (15) repeat -> .
+
+    DECLARE         shift and go to state 5
+    INCASE          shift and go to state 4
+    $end            reduce using rule 15 (repeat -> .)
+
+    expresion                      shift and go to state 1
+    repeat                         shift and go to state 2
+    inCase                         shift and go to state 3
+    declare                        shift and go to state 6
+
+state 1
+
+    (0) S' -> expresion .
+
+
+
+state 2
+
+    (3) expresion -> repeat .
+
+    RBRACKET        reduce using rule 3 (expresion -> repeat .)
+    $end            reduce using rule 3 (expresion -> repeat .)
+
+
+state 3
+
+    (2) expresion -> inCase .
+
+    RBRACKET        reduce using rule 2 (expresion -> inCase .)
+    $end            reduce using rule 2 (expresion -> inCase .)
+
+
+state 4
+
+    (6) inCase -> INCASE . when1 ifnot ENDINCASE SEMICOLON
+    (7) inCase -> INCASE . ID when2 ifnot ENDINCASE SEMICOLON
+    (8) when1 -> . WHEN ID CONDITION sentence THEN LBRACKET expresion RBRACKET when1
+    (9) when1 -> . empty
+    (16) empty -> .
+
+    ID              shift and go to state 10
+    WHEN            shift and go to state 7
+    IFNOT           reduce using rule 16 (empty -> .)
+
+    when1                          shift and go to state 8
+    empty                          shift and go to state 9
+
+state 5
+
+    (4) declare -> DECLARE . ID SEMICOLON
+    (5) declare -> DECLARE . ID DEFAULT NUMBER SEMICOLON
+
+    ID              shift and go to state 11
+
+
+state 6
+
+    (1) expresion -> declare .
+
+    RBRACKET        reduce using rule 1 (expresion -> declare .)
+    $end            reduce using rule 1 (expresion -> declare .)
+
+
+state 7
+
+    (8) when1 -> WHEN . ID CONDITION sentence THEN LBRACKET expresion RBRACKET when1
+
+    ID              shift and go to state 12
+
+
+state 8
+
+    (6) inCase -> INCASE when1 . ifnot ENDINCASE SEMICOLON
+    (10) ifnot -> . IFNOT LBRACKET expresion RBRACKET
+
+    IFNOT           shift and go to state 14
+
+    ifnot                          shift and go to state 13
+
+state 9
+
+    (9) when1 -> empty .
+
+    IFNOT           reduce using rule 9 (when1 -> empty .)
+
+
+state 10
+
+    (7) inCase -> INCASE ID . when2 ifnot ENDINCASE SEMICOLON
+    (11) when2 -> . WHEN CONDITION sentence THEN LBRACKET expresion RBRACKET when2
+    (12) when2 -> . empty
+    (16) empty -> .
+
+    WHEN            shift and go to state 15
+    IFNOT           reduce using rule 16 (empty -> .)
+
+    empty                          shift and go to state 16
+    when2                          shift and go to state 17
+
+state 11
+
+    (4) declare -> DECLARE ID . SEMICOLON
+    (5) declare -> DECLARE ID . DEFAULT NUMBER SEMICOLON
+
+    SEMICOLON       shift and go to state 19
+    DEFAULT         shift and go to state 18
+
+
+state 12
+
+    (8) when1 -> WHEN ID . CONDITION sentence THEN LBRACKET expresion RBRACKET when1
+
+    CONDITION       shift and go to state 20
+
+
+state 13
+
+    (6) inCase -> INCASE when1 ifnot . ENDINCASE SEMICOLON
+
+    ENDINCASE       shift and go to state 21
+
+
+state 14
+
+    (10) ifnot -> IFNOT . LBRACKET expresion RBRACKET
+
+    LBRACKET        shift and go to state 22
+
+
+state 15
+
+    (11) when2 -> WHEN . CONDITION sentence THEN LBRACKET expresion RBRACKET when2
+
+    CONDITION       shift and go to state 23
+
+
+state 16
+
+    (12) when2 -> empty .
+
+    IFNOT           reduce using rule 12 (when2 -> empty .)
+
+
+state 17
+
+    (7) inCase -> INCASE ID when2 . ifnot ENDINCASE SEMICOLON
+    (10) ifnot -> . IFNOT LBRACKET expresion RBRACKET
+
+    IFNOT           shift and go to state 14
+
+    ifnot                          shift and go to state 24
+
+state 18
+
+    (5) declare -> DECLARE ID DEFAULT . NUMBER SEMICOLON
+
+    NUMBER          shift and go to state 25
+
+
+state 19
+
+    (4) declare -> DECLARE ID SEMICOLON .
+
+    RBRACKET        reduce using rule 4 (declare -> DECLARE ID SEMICOLON .)
+    $end            reduce using rule 4 (declare -> DECLARE ID SEMICOLON .)
+
+
+state 20
+
+    (8) when1 -> WHEN ID CONDITION . sentence THEN LBRACKET expresion RBRACKET when1
+    (13) sentence -> . ID
+    (14) sentence -> . NUMBER
+
+    ID              shift and go to state 28
+    NUMBER          shift and go to state 27
+
+    sentence                       shift and go to state 26
+
+state 21
+
+    (6) inCase -> INCASE when1 ifnot ENDINCASE . SEMICOLON
+
+    SEMICOLON       shift and go to state 29
+
+
+state 22
+
+    (10) ifnot -> IFNOT LBRACKET . expresion RBRACKET
+    (1) expresion -> . declare
+    (2) expresion -> . inCase
+    (3) expresion -> . repeat
+    (4) declare -> . DECLARE ID SEMICOLON
+    (5) declare -> . DECLARE ID DEFAULT NUMBER SEMICOLON
+    (6) inCase -> . INCASE when1 ifnot ENDINCASE SEMICOLON
+    (7) inCase -> . INCASE ID when2 ifnot ENDINCASE SEMICOLON
+    (15) repeat -> .
+
+    DECLARE         shift and go to state 5
+    INCASE          shift and go to state 4
+    RBRACKET        reduce using rule 15 (repeat -> .)
+
+    expresion                      shift and go to state 30
+    repeat                         shift and go to state 2
+    inCase                         shift and go to state 3
+    declare                        shift and go to state 6
+
+state 23
+
+    (11) when2 -> WHEN CONDITION . sentence THEN LBRACKET expresion RBRACKET when2
+    (13) sentence -> . ID
+    (14) sentence -> . NUMBER
+
+    ID              shift and go to state 28
+    NUMBER          shift and go to state 27
+
+    sentence                       shift and go to state 31
+
+state 24
+
+    (7) inCase -> INCASE ID when2 ifnot . ENDINCASE SEMICOLON
+
+    ENDINCASE       shift and go to state 32
+
+
+state 25
+
+    (5) declare -> DECLARE ID DEFAULT NUMBER . SEMICOLON
+
+    SEMICOLON       shift and go to state 33
+
+
+state 26
+
+    (8) when1 -> WHEN ID CONDITION sentence . THEN LBRACKET expresion RBRACKET when1
+
+    THEN            shift and go to state 34
+
+
+state 27
+
+    (14) sentence -> NUMBER .
+
+    THEN            reduce using rule 14 (sentence -> NUMBER .)
+
+
+state 28
+
+    (13) sentence -> ID .
+
+    THEN            reduce using rule 13 (sentence -> ID .)
+
+
+state 29
+
+    (6) inCase -> INCASE when1 ifnot ENDINCASE SEMICOLON .
+
+    $end            reduce using rule 6 (inCase -> INCASE when1 ifnot ENDINCASE SEMICOLON .)
+    RBRACKET        reduce using rule 6 (inCase -> INCASE when1 ifnot ENDINCASE SEMICOLON .)
+
+
+state 30
+
+    (10) ifnot -> IFNOT LBRACKET expresion . RBRACKET
+
+    RBRACKET        shift and go to state 35
+
+
+state 31
+
+    (11) when2 -> WHEN CONDITION sentence . THEN LBRACKET expresion RBRACKET when2
+
+    THEN            shift and go to state 36
+
+
+state 32
+
+    (7) inCase -> INCASE ID when2 ifnot ENDINCASE . SEMICOLON
+
+    SEMICOLON       shift and go to state 37
+
+
+state 33
+
+    (5) declare -> DECLARE ID DEFAULT NUMBER SEMICOLON .
+
+    RBRACKET        reduce using rule 5 (declare -> DECLARE ID DEFAULT NUMBER SEMICOLON .)
+    $end            reduce using rule 5 (declare -> DECLARE ID DEFAULT NUMBER SEMICOLON .)
+
+
+state 34
+
+    (8) when1 -> WHEN ID CONDITION sentence THEN . LBRACKET expresion RBRACKET when1
+
+    LBRACKET        shift and go to state 38
+
+
+state 35
+
+    (10) ifnot -> IFNOT LBRACKET expresion RBRACKET .
+
+    ENDINCASE       reduce using rule 10 (ifnot -> IFNOT LBRACKET expresion RBRACKET .)
+
+
+state 36
+
+    (11) when2 -> WHEN CONDITION sentence THEN . LBRACKET expresion RBRACKET when2
+
+    LBRACKET        shift and go to state 39
+
+
+state 37
+
+    (7) inCase -> INCASE ID when2 ifnot ENDINCASE SEMICOLON .
+
+    $end            reduce using rule 7 (inCase -> INCASE ID when2 ifnot ENDINCASE SEMICOLON .)
+    RBRACKET        reduce using rule 7 (inCase -> INCASE ID when2 ifnot ENDINCASE SEMICOLON .)
+
+
+state 38
+
+    (8) when1 -> WHEN ID CONDITION sentence THEN LBRACKET . expresion RBRACKET when1
+    (1) expresion -> . declare
+    (2) expresion -> . inCase
+    (3) expresion -> . repeat
+    (4) declare -> . DECLARE ID SEMICOLON
+    (5) declare -> . DECLARE ID DEFAULT NUMBER SEMICOLON
+    (6) inCase -> . INCASE when1 ifnot ENDINCASE SEMICOLON
+    (7) inCase -> . INCASE ID when2 ifnot ENDINCASE SEMICOLON
+    (15) repeat -> .
+
+    DECLARE         shift and go to state 5
+    INCASE          shift and go to state 4
+    RBRACKET        reduce using rule 15 (repeat -> .)
+
+    expresion                      shift and go to state 40
+    repeat                         shift and go to state 2
+    inCase                         shift and go to state 3
+    declare                        shift and go to state 6
+
+state 39
+
+    (11) when2 -> WHEN CONDITION sentence THEN LBRACKET . expresion RBRACKET when2
+    (1) expresion -> . declare
+    (2) expresion -> . inCase
+    (3) expresion -> . repeat
+    (4) declare -> . DECLARE ID SEMICOLON
+    (5) declare -> . DECLARE ID DEFAULT NUMBER SEMICOLON
+    (6) inCase -> . INCASE when1 ifnot ENDINCASE SEMICOLON
+    (7) inCase -> . INCASE ID when2 ifnot ENDINCASE SEMICOLON
+    (15) repeat -> .
+
+    DECLARE         shift and go to state 5
+    INCASE          shift and go to state 4
+    RBRACKET        reduce using rule 15 (repeat -> .)
+
+    expresion                      shift and go to state 41
+    repeat                         shift and go to state 2
+    inCase                         shift and go to state 3
+    declare                        shift and go to state 6
+
+state 40
+
+    (8) when1 -> WHEN ID CONDITION sentence THEN LBRACKET expresion . RBRACKET when1
+
+    RBRACKET        shift and go to state 42
+
+
+state 41
+
+    (11) when2 -> WHEN CONDITION sentence THEN LBRACKET expresion . RBRACKET when2
+
+    RBRACKET        shift and go to state 43
+
+
+state 42
+
+    (8) when1 -> WHEN ID CONDITION sentence THEN LBRACKET expresion RBRACKET . when1
+    (8) when1 -> . WHEN ID CONDITION sentence THEN LBRACKET expresion RBRACKET when1
+    (9) when1 -> . empty
+    (16) empty -> .
+
+    WHEN            shift and go to state 7
+    IFNOT           reduce using rule 16 (empty -> .)
+
+    when1                          shift and go to state 44
+    empty                          shift and go to state 9
+
+state 43
+
+    (11) when2 -> WHEN CONDITION sentence THEN LBRACKET expresion RBRACKET . when2
+    (11) when2 -> . WHEN CONDITION sentence THEN LBRACKET expresion RBRACKET when2
+    (12) when2 -> . empty
+    (16) empty -> .
+
+    WHEN            shift and go to state 15
+    IFNOT           reduce using rule 16 (empty -> .)
+
+    when2                          shift and go to state 45
+    empty                          shift and go to state 16
+
+state 44
+
+    (8) when1 -> WHEN ID CONDITION sentence THEN LBRACKET expresion RBRACKET when1 .
+
+    IFNOT           reduce using rule 8 (when1 -> WHEN ID CONDITION sentence THEN LBRACKET expresion RBRACKET when1 .)
+
+
+state 45
+
+    (11) when2 -> WHEN CONDITION sentence THEN LBRACKET expresion RBRACKET when2 .
+
+    IFNOT           reduce using rule 11 (when2 -> WHEN CONDITION sentence THEN LBRACKET expresion RBRACKET when2 .)
+

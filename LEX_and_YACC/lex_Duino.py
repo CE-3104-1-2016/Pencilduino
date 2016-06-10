@@ -1,28 +1,26 @@
 reserved={'Hasta': 'UNTIL', 'Cuando': 'WHEN', 
 'DEFAULT': 'DEFAULT', 'EnTons': 'THEN', 'Desde':'FROM',
 'Haga' : 'DO', 'SiNo': 'IFNOT', 'Inicio': 'START',
-'Repita': 'REPEAT', 'Final': 'END', 'Ini': 'INI',
+'Repita': 'REPEAT', 'Final': 'END', 'Ini': 'INITIALIZE',
 'Fin_EnCaso': 'ENDINCASE', 'Proc': 'PROCEDURE',
-'EnCaso': 'INCASE', 'Fin_Desde': 'ENDSINCE', 'Inc': 'INC',
-'Rellene': 'FILL', 'DiagonalD': 'DIAGR', 
-'HastaEncontrar': 'TOFIND', 'DCL': 'DECLARE', 
+'EnCaso': 'INCASE', 'Fin_Desde': 'ENDFROM', 'Inc': 'INCREASE',
+'Rellene': 'FILL', 'DiagonalD': 'DIAGR','Dec':'DECREASE',
+'HastaEncontrar': 'TOFIND', 'DCL': 'DECLARE',
 'DiagonalI': 'DIAGL', 'Llamar': 'CALL', 'Punto': 'DOT'
 }
-
 tokens = [
-    'ID','NUMBER','PLUS','MINUS','TIMES','DIVIDE','CONDITION',
-    'LPAREN','RPAREN','LBRACKET','RBRACKET','SEMICOLON']+list(reserved.values())
+    'ID','NUMBER','CONDITION','LPAREN','RPAREN','LBRACKET',
+    'RBRACKET','SEMICOLON','COMMA','COLOR','COLON']+list(reserved.values())
 
-#'CONDITIONAL',
+
+
 # Tokens
-t_PLUS      = r'\+'
-t_MINUS     = r'-'
-t_TIMES     = r'\*'
-t_DIVIDE    = r'/'  
 t_LPAREN    = r'\('
 t_RPAREN    = r'\)'
 t_LBRACKET  = r'\{'
 t_RBRACKET  = r'\}'
+t_COLON     = r'\:'
+t_COMMA     = r','
 t_SEMICOLON = r';'
 # Ignored characters space and taps
 t_ignore = " \t"
@@ -51,6 +49,8 @@ def t_error(t):
 
 def t_ID(t):
     r'[a-zA-Z_][a-zA-Z_0-9]*'
+    if(t.value=='Azul' or t.value=='Rojo'):
+        t.type = 'COLOR'    # Check for reserved words
     if(t.value in reserved):
         t.type = reserved.get(t.value)    # Check for reserved words
     return t
