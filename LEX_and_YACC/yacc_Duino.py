@@ -25,7 +25,7 @@ def in2(name,dic):
 
 
 def get_value(name,dic):
-    value="wtf"
+    value="none"
     i = 0
     while(i < len(dic)):
 
@@ -100,7 +100,6 @@ def p_repeat(p):
     '''repeat : REPEAT expression until_find SEMICOLON '''
     #print("Hola")
 
-
 def p_until_find(p):
     '''until_find : TOFIND sentence CONDITION sentence'''
     # i=10
@@ -133,7 +132,6 @@ def p_initialize(p):
 
 def p_fill(p):
     '''fill : FILL LPAREN fillSentence RPAREN SEMICOLON'''
-
 
 def p_fillSentence(p):
     '''fillSentence : ID
