@@ -8,37 +8,22 @@ import os
 import random
 import socket
 import tkinter.scrolledtext
+import yacc_Duino
+import analizer
+
 class myClient(Thread):
-	host="192.168.4.1"
-	port=80
-	size=1024
-	mySock=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		
+	
+
 	def __init__(self,new_window):
+		self.host="192.168.4.1"
+		self.port=80
+		self.size=1024
+		self.mySock=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		super(myClient, self).__init__()
 		self.window=new_window
 		self.Connexion=False
-
-	def listen(self):
-		message=""
-		if self.Connexion:
-			data=b''
-			while(not '\n' in message):
-				data=self.mySock.recv(self.size)
-				message+=data.decode()
-
-		return message
-
-	def send(self,message):
-		if self.Connexion:
-			mns=message.encode()
-			try:
-				self.mySock.send(mns)
-			except:
-				self.Connexion=False
-			
-
-	def connect(self):
+	
+	def myconexion(self):
 		server_address=(self.host,self.port)
 		try:
 			self.mySock.connect(server_address)
@@ -49,6 +34,28 @@ class myClient(Thread):
 			self.window.show("Error can't connect to Pencilduino server\n")
 			return False
 
+	def listen(self):
+		message=""
+		if self.Connexion:
+			data=b''
+		while(not '\n' in message):
+			data=self.mySock.recv(self.size)
+			message+=data.decode()
+			print(message)
+			return message
+
+	def send(self,message):
+		if self.Connexion:
+			mns=message.encode()
+			try:
+				self.mySock.send(mns)
+				print(mns)
+			except:
+				self.Connexion=False
+
+
+	
+
 	def run(self):
 		while True:
 			try:
@@ -57,6 +64,7 @@ class myClient(Thread):
 			except:
 				self.window.show("Connexion Error, stop listen\n")
 				break;
+
 class myDrawingPlace(object):
 	def __init__(self,root,width,height):
 		self.root = root
@@ -70,13 +78,13 @@ class myDrawingPlace(object):
 		self.lastPointY = 0
 		self.lastColor = 0
 		self.squares = []
-		self.squareXY(14,0,6)
+		#self.squareXY(14,0,6)
 		#self.squareXY(3,6,0)
 		#self.squareXY(3,8,1)
-		#self.diagonal("left","down")
+		#self.diagonal("left","down",2)
 		#self.printMatrix(self.matrix,self.width,self.height)
 		#self.eraseSquares()
-		self.rellenar(6)
+		#self.rellenar(6)
 	#initialize the matrix 
 	def initMatrix (self,matrix,width,height):
 		i = 0
@@ -86,7 +94,7 @@ class myDrawingPlace(object):
 			while (j < height):
 				temp  = temp + ["gray"]
 				j = j + 1	
-			self.matrix = self.matrix + [temp]
+				self.matrix = self.matrix + [temp]
 			i = i + 1
 	#print the matrix using the amount of rows and colums
 	def printMatrix (self,matrix,width,height):
@@ -109,11 +117,13 @@ class myDrawingPlace(object):
 			self.lastColor = color
 			square = self.myCanvas.create_rectangle(posx*30, posy*30,posx*30+ 30,posy*30 + 30, fill=myColor,outline="white")
 			self.squares = self.squares + [square]
-			self.matrix[posx][posy] = [myColor]
+			print(len(self.matrix),posx,posy)
+
+			#self.matrix[posx][posy] = [myColor]
 		else: 
 			print ("Error while painting the square.")
 	#diagonal  (right or left , up or down)
-	def diagonal (self,directionX,directionY):
+	def diagonal (self,directionX,directionY,a):
 		xAxisMovement=0
 		yAxisMovement=0
 		if (directionX == "right"):
@@ -128,13 +138,14 @@ class myDrawingPlace(object):
 		print(yAxisMovement)
 		nextXPosition = int((self.lastPointX)/30) + xAxisMovement
 		nextYPosition = int((self.lastPointY)/30) + yAxisMovement
-		
-		while ((nextXPosition < self.width and nextYPosition < self.height) 
-													and nextXPosition >= 0 and nextYPosition >= 0 ):
+		i = 0
+		while ((nextXPosition < self.width and nextYPosition < self.height and i < a) 
+			and nextXPosition >= 0 and nextYPosition >= 0 ):
 			print("The new position is: " + str (nextXPosition) + " : "+ str(nextYPosition) )
 			self.squareXY(nextXPosition,nextYPosition,self.lastColor)
 			nextXPosition = nextXPosition + xAxisMovement
 			nextYPosition = nextYPosition + yAxisMovement
+			i = i + 1
 	#rellenar
 	def rellenar(self,val):
 		print ("Pos X actual: " + str(int(self.lastPointX/30)) )
@@ -169,10 +180,11 @@ class myDrawingPlace(object):
 		else:
 			for i in self.squares:
 				self.myCanvas.delete(i)
-			self.root.update()
-			#reinit the matrix
-			self.initMatrix(self.matrix,self.width,self.height)
-	#
+				self.root.update()
+		#reinit the matrix
+		self.initMatrix(self.matrix,self.width,self.height)
+	
+#
 class myWindow:
 	actual_index=3.0
 	def __init__(self):
@@ -198,25 +210,66 @@ class myWindow:
 		#Button to erase the squares
 		self.myButton = Button(self.lienzo, text='ERASE', command=self.myDP.eraseSquares,bg='white',fg='blue')
 		self.myButton.place(x=1000,y=30)
+		
 		#Communication
 	def comunicate(self):
 		self.Duino=myClient(self)
-		if(self.Duino.connect()):
+		if(self.Duino.myconexion()):
 			self.Duino.start()			
+	
 	def enter(self,event):
-		if(self.Duino.Connexion==False):
-			self.show("Please connect first to server before sending commands\n")
-		else:
-			message=self.command_line.get()
-			if(message!="" or message!=None):
-				if(not '\n' in message):
-					message+='\n'
-				self.Duino.send(message)
+		message=self.command_line.get()
+		if  (message != ""):
+			result = analizer.analize(self,message.replace("\n",""))
+			self.command_line.delete(0, 'end')
+			if (result):
+				duino_msg = message.split(";")
+				for code in duino_msg:
+					if ("Rellene" in code):
+						num = int(code[code.index("(")+1:code.index(")")])
+						self.myDP.rellenar(num)
+						self.send("rellene_"+str(num)+"\n")
+					elif ("Punto" in code):
+						myCode =code[code.index("(")+1:code.index(")")]
+						myCode = myCode.split(",")
+						x = int(myCode[0])
+						y = int(myCode[1])
+						color = myCode[2]
+						if (color == "Azul"):
+							color = 0
+						else:
+							color = 1
+						self.myDP.squareXY(x,y,color)
+						self.send("punto_" + str(x) +"_"+str(y)+"_" +str(color)+"\n")
+					elif ("DiagonalD" in code or "DiagonalI" in code):
+						num = int(code[code.index("(")+1:code.index(")")])
+						if (num > 0 and "DiagonalD" in code):
+							self.myDP.diagonal("right","up",abs(num))
+							self.send("diagonald_"+	str(num)+"\n")
+						if (num < 0 and "DiagonalD" in code):
+							self.myDP.diagonal("right","down",abs(num))
+							self.send("diagonald_"+	str(num)+"\n")	
+						if (num > 0 and "DiagonalI" in code):
+							self.myDP.diagonal("left","up",abs(num))
+							self.send("diagonali_"+	str(num)+"\n")
+						if (num < 0 and "DiagonalI" in code):
+							self.myDP.diagonal("left","down",abs(num))
+							self.send("diagonali_"+	str(num)+"\n")				
+			else:
+
 				self.show(message)
 				self.command_line.delete(0, 'end')
+	def send(self,msg):
+		if (self.Duino.Connexion):
+			self.Duino.send(msg)
+		else: 
+			self.show("Please connect first to server before sending commands\n")
+
 	def show(self,message):
 		index=self.actual_index
 		if(message!="" or message!=None):
+			if(message[-1]!="\n"):
+				message+="\n"
 			self.chart.configure(state=NORMAL)
 			self.chart.insert(index,"-> "+message)
 			self.actual_index+=1.0

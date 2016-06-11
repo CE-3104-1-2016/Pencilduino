@@ -12,12 +12,37 @@ import yacc_Duino
 #data = "DCL R;\nDiagonalD(R);\nDiagonalI(12);\nRellene(2);"
 #data = "Proc suma(a,b,c,d,e,f)\n DCL d;\nInicio:\n Rellene(8);\n Punto(2,2,Azul);\nFinal;\nProc Float(lista_2,indice)\n DCL find;\nInicio:\n Rellene(8);\n Punto(1,2,Azul);\nFinal;\nProc Hallar_X()\n DCL Raw;\nInicio:\nPunto(1,2,Azul);\nFinal;"
 #data = "Proc Suma(a,b)\n DCL resultado;\nInicio:\n Punto(1,2,Azul);\nFinal;\nLlamar suma(1,2);"
-data = "Rellene(2);"
+def analize(gui,code):
+    try:
+        result = yacc_Duino.yacc.parse(code)
+        #painter.define_name(yacc_Duino.Variables)
+        #interprete(yacc_Duino.STACK) 
+        for i in yacc_Duino.STACK:
+            gui.show (str(i))
+        return True 
+    except SyntaxError as Sy:   
+        print("Error de Syntaxis:",Sy)
+        msg = "Error de Syntaxis:" + str(Sy)    
+        gui.show(str(msg))
+        return False
+    except ValueError as Va:
+        print("Error valor erroneo:",Va)
+        msg = "Error valor erroneo" + str(Va)    
+        gui.show(str(msg))
+        return False
+    except NameError as Na:
+        print("Undifined Name:",Na)
+        msg = "Undifined Name:" + str(Na)    
+        gui.show(str(msg))
+        return False
+    finally:
+        print(code)		
+        pass
+
+
 def interprete(code_tree):
     painter.Interpreter(code_tree)
-    
-
-
+"""
 try:
     result = yacc_Duino.yacc.parse(data)
     painter.define_name(yacc_Duino.Variables)
@@ -33,5 +58,5 @@ finally:
     print(data)
     pass
 
-#"""
+"""
         
