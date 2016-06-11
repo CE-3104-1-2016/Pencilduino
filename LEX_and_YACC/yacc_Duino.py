@@ -11,9 +11,12 @@ matrix_size=15
 syntax_flag=True
 temp_list={}
 stack_call={}
-
-
-
+#dictionaries for incase con when_1
+indexes = {"ID1":0,"ID2":0,"COND":0}
+ID1   = {}
+ID2   = {}
+COND  = {}
+Result= {}
 start='expression'
 
 def in2(name,dic):
@@ -22,7 +25,6 @@ def in2(name,dic):
         if(i.lower()==name.lower()):
             find_flag=True
     return find_flag
-
 
 def get_value(name,dic):
     value="none"
@@ -66,17 +68,31 @@ def p_inCase(p):
 
         if (len(p)==7 and not in2(p.slice[2].value,Variables)):
             error_value(p,"Please define before use the variable",NameError)
+        else:
+            print("The dictionary of incase is: ")
+            print(ID1)
+            print(ID2)
+            print(COND)
+            order()
         pass
 
 def p_when1(p):
-    '''when1 : WHEN ID CONDITION sentence THEN LBRACKET expression RBRACKET when1
+    '''when1 : WHEN ID CONDITION sentence_when1 THEN LBRACKET expression RBRACKET when1
              | empty'''
-
+    #To validate some errors
     if(len(p)==10 and not in2(p.slice[2].value,Variables)):
         error_value(p,"Please define before use the variable",NameError)
+    else:
+        if (len(p.slice)>=4):
+            indexes["ID1"]=indexes["ID1"]+1
+            print(indexes["ID1"])
+            ID1[indexes["ID1"]]=p.slice[2].value
+
+            indexes["COND"]=indexes["COND"]+1
+            print(indexes["COND"])
+            COND[indexes["COND"]]=p.slice[3].value
 
     pass
-
 def p_when2(p):
     '''when2 : WHEN CONDITION sentence THEN LBRACKET expression RBRACKET when2
              | empty
@@ -86,7 +102,7 @@ def p_ifnot(p):
     '''ifnot : IFNOT LBRACKET expression RBRACKET'''
 
     pass
-
+#General purposes sentences
 def p_sentence(p):
     '''sentence : ID
                 | NUMBER'''
@@ -95,7 +111,19 @@ def p_sentence(p):
         if(not in2(p.slice[1].value,Variables)):
             error_value(p,"Please define before use the variable",NameError)
     pass
+#Sentence related to (in-case,when1)
+def p_sentence_when1(p):
+    '''sentence_when1 : ID
+                | NUMBER'''
+    #Validate the error
+    if(p.slice[1].type=="ID" and not in2(p.slice[1].value,Variables)):
+            error_value(p,"Please define before use the variable",NameError)
+    else:
+        indexes["ID2"]=indexes["ID2"]+1
+        print(indexes["ID2"])
+        ID2[indexes["ID2"]]=p.slice[1].value
 
+        pass
 def p_repeat(p):
     '''repeat : REPEAT expression until_find SEMICOLON '''
     #print("Hola")
@@ -231,7 +259,6 @@ def p_moreParam(p):
     temp_list[p.slice[2].value]="param"
 
 
-
 def p_procedure(p):
     """ procedure : PROCEDURE ID LPAREN params RPAREN localDeclare START COLON localExpression END SEMICOLON"""
     temp_list[p.slice[2].value]="procedure"
@@ -281,8 +308,6 @@ def verify_Call():
         if(len(valid_arguments)!=len(list_arguments)):
             error_value("vacio","Function '"+name+"' recive "+str(len(valid_arguments))+" and "+str(len(list_arguments))+" were given",ValueError)
 
-
-
 def p_error(p):
     if(p!=None):
         raise SyntaxError ("Problems in: "+str(p))
@@ -295,6 +320,13 @@ def error_value(p,msg,Type):
     else:
         raise Type(msg+str(p.slice))
 
-
+def order():
+    j = 1
+    i = len(ID2)
+    for key in ID2:
+        Result[j] = [ID1[i],COND[i],key]
+        i -= 1
+        j += 1
+    print(Result)
 
 yacc.yacc()
