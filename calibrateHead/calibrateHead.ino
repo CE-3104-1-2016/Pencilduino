@@ -12,7 +12,7 @@ const short bluePos = 10; //----------------------------------------------
 const short redPos = 180; // Servo position for the color or move state
 const short spaces = 15; //Squares on a row or column
 const short blueMove = 25; //---------------------------------------------
-const short redMove = 165;
+const short redMove = 155;
 const short height = 650 / spaces; //Steps for the height of the square
 const short width = 650 / spaces; //Steps for the height of the square
 const short moveTime[3]  = {100, 100, 50}; //Time to wait the motor to move x, y, servo
@@ -126,12 +126,20 @@ bool diagonal(char* entry, short dirx) {
   if (value == 0) {
     return true;
   }
-  short diry = value / value;
+  short diry = 1;
+  if(value>0){
+    diry = 1;
+  }else{
+    diry=-1;
+  }
   if ( (0 <= actualPos[0] + value * dirx < spaces) && (0 <= actualPos[1] + diry * value < spaces)) {
-    for (short i = 0; i < value; i++) {
+    for (short i = 0; i < abs(value); i++) {
       movePencil(actualPos[0] + dirx, actualPos[1] + diry);
       draw(lastColor);
+      Serial.println("Enter");
     }
+    Serial.println("this true");
+    Serial.println(value);
     return true;
   } else {
     return false;
@@ -150,9 +158,17 @@ bool fill(char* entry) {
   if (value == 0) {
     return true;
   }
-  /*for(int i=0; i<value i++;){
-    for(int j=
-    }*/
+  short nowX=actualPos[0];
+  short nowY=actualPos[1];
+  for(int i= nowX - value; i<(nowX + value)+1; i++){
+    for(int j=nowY - value; j<(nowY + value)+1; j++){
+      if((0 <= i < spaces) && (0 <= j < spaces) && boardMatrix[i][j]==B00011){
+        movePencil(i, j);
+        draw(lastColor);
+      }
+    }
+  }
+  return true;
 }
 
 //Move method
@@ -169,7 +185,9 @@ bool movePencil(short x, short y) {
     delay(moveTime[1]);
     actualPos[0] = x;
     actualPos[1] = y;
-    Serial.println("Movin ");
+    Serial.print("Movin ");
+    Serial.print(x);
+    Serial.print(y);
     return true;
   } else {
     return false;
@@ -308,28 +326,31 @@ bool draw(short colr) {
       sweep(bluePos);
       break;
   }
-  changeColor(colr);
   short dir = 1;
+  short remnant = 0;
   for (int i = 0; i < height; i++) {
     xAxis.step(width * dir * dirs[0]); //Move a line
     delay(10); //Wait for the motor to move
     dir = dir * -1;
     yAxis.step(1 * dirs[1]); //Move step by step
     delay(2); //Wait for the motor to move
+    remnant+=width * dir * dirs[0]*-1;
   }
   yAxis.step(-height * dirs[1]); //Return to the home position for the matrix
   delay(10); //Wait for the motor to move
-  if (width % 2 == 0) {
-    xAxis.step(-width * dirs[0]);
+  if (remnant!= 0) {
+    xAxis.step(-remnant);
     delay(10); //Wait for the motor to move
   }
   return true;
 }
 
 
+
+
 void loop()
 {
-  changeColor(0);
+  /*changeColor(0);
   delay(2000);
   changeColor(1);
   delay(2000);
@@ -361,9 +382,13 @@ void loop()
   movePencil(5, 7);
   changeColor(0);
   delay(2000);
-  changeColor(1);
+  changeColor(1);*/
+  //head.write(bluePos);
+  movePencil(5,5);
+  String order="diagonald_-5";
+ Serial.print(diagonal(const_cast<char*>(order.c_str()),1));
   delay(2000);
-  movePencil(0, 0);
+ // movePencil(0, 0);
 }
 
 
